@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+
+#my
+VSC/
+tst*/
+.generated_files/
+build/
+debug/
+dist/
