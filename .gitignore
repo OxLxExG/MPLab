@@ -38,3 +38,4 @@ tst*/
 build/
 debug/
 dist/
+!h2meta.exe
