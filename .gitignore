@@ -38,7 +38,10 @@ tst*/
 build/
 debug/
 dist/
+queuelogs/
+
 !h2meta.exe
+
 */*.log
 */*.inx
 */*.bin
