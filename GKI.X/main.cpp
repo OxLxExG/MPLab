@@ -282,7 +282,7 @@ static void WakeUp(void)
 {
 	batOn.On();
 	power.On();
-	ads131.WakeUp();
+	if (!ads131.IsOn) ads131.WakeUp();
 }
 static void StandBy(bool fullStop)
 {
@@ -334,29 +334,6 @@ static void UpdateFromEEP(void)
 	ltc2942c::Set(&eep_kadr_charge.charge.AccCharge);
 }
 
-//static void SaveChargeToEEP(void)
-//{
-	//eep_charge_t c;
-	//LastKadrEEPChargeUpdate = workData.time;
-	//c.kadr = LastKadrEEPChargeUpdate;
-	//memcpy(&c.charg, &workData.charge, sizeof(charge_t));
-	//FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET, (uint8_t*) &c,sizeof(c));
-	//while(FLASH_is_eeprom_ready());
-//}
-//static bool UpdateFromEEP(void)
-//{
-	//Gk.updateDACREF(dataprog.GR1.DAC);
-	////	nnk.updateDACREF(&dataprog.dac.DAC1);
-	//bool res = eeprom.charg.AccCharge == 0;
-	//if (res) ltc2942.ResetCharge();
-	//return res;
-//}
-
-
-//static void cbSetupADC(uint8_t cmd)
-//{
-	//
-//}
 // вызывается после ads131.WakeUp();
 static void AddSyncFrameSetupADC(void)
 {	
@@ -560,12 +537,10 @@ static void RunCmd(void)
 		case CMD_BOOT:
 			if (*(uint32_t*)(&Com.buf[DATA_POS]) == 0x12345678)
 			{
-				 cli();
-#ifdef EEP_RESET
+				cli();
 				FLASH_write_eeprom_byte(0, 0);
 				while(FLASH_is_eeprom_ready());
-#endif				
-				 ccp_write_io((void *)&RSTCTRL.SWRR, 1);
+                ccp_write_io((void *)&RSTCTRL.SWRR, 1);
 			}
 		break;
 		case CMD_ERAM:
@@ -624,27 +599,7 @@ static void RunCmd(void)
 			else if (from == 4000)
 			{
 				AddSyncFrameReadRegsADC();
-			}
-						
-			//if (from == 2048)
-			//{
-				//FLASH_read_eeprom_block((eeprom_adr_t) EEP_OFFSET, dptr, n);
-				//Com.CRCSend(n+HEADER_LEN);
-			//}
-			//else if (from == 1024)
-			//{
-				//AddSyncFrameReadRegsADC();
-			//}			
-			//else if (from == 0)
-			//{
-				//memcpy(dptr, (const void*) 0x8000, n);
-				//Com.CRCSend(n+HEADER_LEN);
-			//}
-			//else if (from == 512)
-			//{
-				//memcpy(dptr, (const void*) 0x8200, n);
-				//Com.CRCSend(n+HEADER_LEN);
-			//}
+			}						
 		}
 		break;
 
@@ -692,32 +647,7 @@ static void RunCmd(void)
 			}
 			Com.CRCSend(HEADER_LEN);
 			
-			UpdateFromEEP();
-			
-			
-			//if (from == 2048)
-			//{
-				//FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET, dptr, n);
-				//
-				////FLASH_write_eeprom_block((eeprom_adr_t) from-2048, dptr, n);
-			//}
-			//else if (from == 1024)
-			//{
-				//// no user wtite ADC
-			//}
-			//else if (from == 0)
-			//{
-				//FLASH_write_flash_n(0, dptr, n);
-			//}
-			//else if (from == 512)
-			//{
-				//FLASH_write_flash_n(512, dptr, n);
-			//}
-			//Com.CRCSend(HEADER_LEN);
-			////UpdateDAC();
-			//if (!UpdateFromEEP()) ltc2942.SetLastCharge(eeprom.charg.AccCharge);
-			
-			
+			UpdateFromEEP();						
 		}
 		break;
 		
@@ -813,7 +743,9 @@ int main(void)
 	AddSyncFrameSetupADC();
 	
 	ltc2942c::twi.CallbackRegister(ltc2942c::I2CErr);
-						
+	
+    //Indicator.User = true;
+    
 	sei();	
 	
 	UpdateFromEEP();
@@ -876,7 +808,7 @@ int main(void)
 			ResetFunction = 10;
 
 			saveGK = Gk.get();
-			if ((workData.AppState == APP_WORK)|| (TestModeTimer > 0)) UpdateWorkData();
+			if ((workData.AppState == APP_WORK) || (TestModeTimer > 0)) UpdateWorkData();
 			
 			if (TestModeTimer > 0) 
 			{
@@ -887,7 +819,7 @@ int main(void)
 						StandBy(workData.AppState == APP_IDLE);
 					}
 				}
-				else if (Powered()) ResetWdrADC();
+				else if (Powered() && (workData.AppState != APP_WORK)) ResetWdrADC();
 			}
 			else Com.errRS485DirReset();
 			
@@ -939,19 +871,27 @@ int main(void)
 						SaveChargeAndStateToEEP_Async();
 						ResetFunction = 34;
 						
-						WakeUp();
+                        // вариант
+                        // ads131.Reset();
+                        // AddSyncFrameSetupADC(); //?
+                        
+                        WakeUp();
+  						// После WakeUp() !!!
+       					//AddSyncFrameSetupADC(); //?
 						//UpdateDAC(); //?
-						// После WakeUp() !!!
-						AddSyncFrameSetupADC(); //?
 					} 					
 				break;					
 				case APP_WORK:
 				    
+                    //Indicator.On();
+                    
 					ResetWdrADC();
 					
 				    ResetFunction = 4;
 					Ram.write((uint8_t*) &workData.time, sizeof(RamData_t));	
 				    ResetFunction = 40;
+                    
+                    //Indicator.Off();
 				break;
 			}
 		} // ~if (SysTick.Is2SecTick())

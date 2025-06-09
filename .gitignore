@@ -39,3 +39,6 @@ build/
 debug/
 dist/
 !h2meta.exe
+*/*.log
+*/*.inx
+*/*.bin

@@ -211,7 +211,7 @@ public:
 	// выполняется вконце фрейма (по даташиту)
 	INLN void AddSyncFrameStandBy(void)
 	{
-		cmdStandBy =1;
+		cmdStandBy = 1;
 	}
 	// выполняется сразу асинхронно  !!!
 	INLN void WakeUp(void)
