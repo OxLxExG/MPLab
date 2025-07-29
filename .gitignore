@@ -30,6 +30,7 @@
 *.exe
 *.out
 *.app
+*.lss
 
 #my
 VSC/

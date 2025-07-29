@@ -1,0 +1,155 @@
+{
+    "importedFrom": "./",
+    "version": "1.5",
+    "configurations": [
+        {
+            "name": "default",
+            "id": "",
+            "device": "AVR128DB48",
+            "imageType": "application",
+            "imagePath": "./out/GKI/default.elf",
+            "toolProperties": "default-tool",
+            "tool": "Simulator",
+            "packs": [
+                {
+                    "name": "AVR-Dx_DFP",
+                    "vendor": "Microchip",
+                    "version": "2.7.321"
+                }
+            ],
+            "fileSet": "Project files",
+            "toolchain": "default-AVR-GCC",
+            "userVariables": "default-uservariables",
+            "preBuildSteps": [
+                "..\\\\p.bat %{ProjectPath}"
+            ],
+            "postBuildSteps": [
+                "..\\\\evsc.bat %{ProjectName} %{ProjectPath} %{TargetPath}"
+            ]
+        }
+    ],
+    "propertyGroups": [
+        {
+            "name": "default-uservariables",
+            "type": "uservariables",
+            "properties": {}
+        },
+        {
+            "name": "default-AVR-GCC",
+            "type": "toolchain",
+            "provider": "microchip.toolchains:avr-gcc@5.4.0",
+            "properties": {
+                "global.common-include-directories": [
+                    "_I",
+                    "../_Inc"
+                ],
+                "global.lss": true,
+                "global.eep": true,
+                "global.srec": true,
+                "global.usersig": true,
+                "compiler.optimization-level": "-Os",
+                "compiler.extra-include-directories": [
+                    "."
+                ],
+                "compiler++.optimization-level": "-Os",
+                "compiler++.preprocessor-macros": [
+                    "F_CPU=8000000UL",
+                    "ADDRESS_PROCESSOR=3",
+                    "CLOCK=CLKHT,TA0,CLKOUT",
+                    "DIOD=PF,2,INV",
+                    "GK=CMP0,AINP1,TA1",
+                    "USEUSART2=DEF0,255,TB0",
+                    "USEUSART3=DEF0,200,SPI_MODE",
+                    "MX25L256=SP1,ALT1,PF,4,UART2",
+                    "ADS131=UART3,PB,4,PB,3,PB,5",
+                    "ADXL356=3,-6,4,0",
+                    "HMC=PA,4,1,5,-2",
+                    "PWR=PD,4",
+                    "BATON=PD,7",
+                    "LTC2942=I2C0,ALT2",
+                    "DEBUG"
+                ],
+                "compiler++.extra-include-directories": [
+                    "."
+                ],
+                "linker.input-libraries": [
+                    "libm"
+                ],
+                "linker.extra-lib-directories": [
+                    "."
+                ],
+                "linker.flash-segment": [
+                    ".text=0x1000"
+                ],
+                "linker.other-options": [
+                    "-T ..\\\\..\\\\..\\\\..\\\\avrxmega4.x",
+                    "-Wl,-section-start=.text=0x2000"
+                ],
+                "compiler++.appendMe": [
+                    "-fno-strict-aliasing"
+                ],
+                "archiver.archiver-flags": "-r"
+            }
+        },
+        {
+            "name": "default-tool",
+            "type": "tool",
+            "properties": {
+                "AutoSelectMemRanges": "manual",
+                "ToolFirmwareFilePath": "Press to browse for a specific firmware version",
+                "ToolFirmwareOption.UpdateOptions": "ToolFirmwareOption.UseLatest",
+                "ToolFirmwareToolPack": "Press to select which tool pack to use",
+                "communication.interface": "updi",
+                "communication.interface.jtag": "2wire",
+                "communication.speed": "0,500",
+                "debugoptions.debug-startup": "Use system settings",
+                "debugoptions.reset-behaviour": "Use system settings",
+                "debugoptions.simultaneous.debug": false,
+                "debugoptions.useswbreakpoints": true,
+                "event.recorder.debugger.behavior": "Running",
+                "event.recorder.enabled": false,
+                "event.recorder.scvd.files": "",
+                "freeze.timers": false,
+                "lastid": "",
+                "memories.aux": false,
+                "memories.bootflash": true,
+                "memories.configurationmemory": false,
+                "memories.configurationmemory2": true,
+                "memories.dataflash": true,
+                "memories.eeprom": false,
+                "memories.exclude.configurationmemory": true,
+                "memories.flashdata": true,
+                "memories.id": false,
+                "memories.instruction.ram.ranges": "${memories.instruction.ram.ranges}",
+                "memories.programmemory": true,
+                "memories.programmemory.ranges": "0-ffff",
+                "programoptions.donoteraseauxmem": false,
+                "programoptions.eraseb4program": true,
+                "programoptions.pgmentry.voltage": "low",
+                "programoptions.pgmspeed": "Med",
+                "programoptions.preservedataflash": false,
+                "programoptions.preservedataflash.ranges": "${memories.dataflash.default}",
+                "programoptions.preserveeeprom": false,
+                "programoptions.preserveeeprom.ranges": "1400-15ff",
+                "programoptions.preserveprogram.ranges": "",
+                "programoptions.preserveprogramrange": false,
+                "programoptions.programcalmem": false,
+                "programoptions.programuserotp": false,
+                "programoptions.testmodeentrymethod": "VDDFirst",
+                "toolpack.updateoptions": "toolpack.updateoptions.uselatestoolpack",
+                "toolpack.updateoptions.packversion": "Press to select which tool pack to use"
+            }
+        }
+    ],
+    "fileSets": [
+        {
+            "name": "Project files",
+            "files": [
+                "Makefile",
+                "*.cpp",
+                "../_Lib/*"
+            ],
+            "encoding": "windows-1251"
+        }
+    ]
+}
