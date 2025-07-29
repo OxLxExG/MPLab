@@ -45,7 +45,11 @@ dist/
 queuelogs/
 
 !h2meta.exe
+<<<<<<< HEAD
 !user.cmake
+=======
+!cmake/*/*/user.cmake
+>>>>>>> 6ef267f76b54acc67c1cba9dc90e450a0ea66be0
 
 */*.log
 */*.inx
