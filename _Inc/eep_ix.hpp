@@ -60,32 +60,86 @@ public:
 			}
 		}
 	}
-		
-	bool Save(uint16_t adr, void* data, uint8_t cnt)
-	{
-		
-		if (GPR.GPR1 & BUSY_GPR1_BIT) return false;
-		GPR.GPR1 |= BUSY_GPR1_BIT;
-
+	INLN void _beginSave(uint16_t adr, void* data, uint8_t cnt)
+    {
 		#ifdef DBG_IND
 	    Indicator.On();
 		#endif
-		
-		timout = 2;		
-				
+
 		memcpy(buf, data, cnt);		
+
 		wptr =  (uint8_t*) (EEPROM_START + adr);
 		writeN = cnt;
 		
 		uint8_t cmd;
-		if (cnt <= 4) cmd = NVMCTRL_CMD_EEMBER4_gc;
+		if (cnt <= 2) cmd = NVMCTRL_CMD_EEMBER2_gc;
+		else if (cnt <= 4) cmd = NVMCTRL_CMD_EEMBER4_gc;
 		else if (cnt <= 8) cmd = NVMCTRL_CMD_EEMBER8_gc;
 		else if (cnt <= 16) cmd = NVMCTRL_CMD_EEMBER16_gc;
 		else cmd = NVMCTRL_CMD_EEMBER32_gc;
 				
 		while (NVMCTRL.STATUS & (NVMCTRL_EEBUSY_bm | NVMCTRL_FBUSY_bm));		
-		ccp_write_spm((void *)&NVMCTRL.CTRLA, cmd);
+		ccp_write_spm((void *)&NVMCTRL.CTRLA, cmd);        
+    }	
+    INLN bool SaveBytes(uint16_t adr, void* vdata, uint8_t cnt)
+    {
+		if (GPR.GPR1 & BUSY_GPR1_BIT) return false;
+		GPR.GPR1 |= BUSY_GPR1_BIT;
+        
+        uint8_t* write = (uint8_t *) (EEPROM_START + adr);
+        uint8_t* data = (uint8_t*) vdata;
+
+        /* Wait for completion of previous operation */
+        while (NVMCTRL.STATUS & (NVMCTRL_EEBUSY_bm | NVMCTRL_FBUSY_bm));
+
+        /* Program the EEPROM with desired value(s) */
+        ccp_write_spm((void *)&NVMCTRL.CTRLA, NVMCTRL_CMD_EEERWR_gc);
+
+        do {
+            /* Write byte to EEPROM */
+            *write++ = *data++;
+            cnt--;
+        } while (cnt != 0);
+
+        /* Clear the current command */
+        ccp_write_spm((void *)&NVMCTRL.CTRLA, NVMCTRL_CMD_NONE_gc);
+
+        while (NVMCTRL.STATUS & (NVMCTRL_EEBUSY_bm | NVMCTRL_FBUSY_bm));
+
+        GPR.GPR1 &= ~BUSY_GPR1_BIT;
+
+        return true;               
+    }
+    
+    INLN bool Save(uint16_t adr, void* data, uint8_t cnt)
+    {
+		if (GPR.GPR1 & BUSY_GPR1_BIT) return false;
+		GPR.GPR1 |= BUSY_GPR1_BIT;
+        
+		_beginSave(adr,data,cnt);		
+
+		// dummi write EEPROM
+		// begin erase
+		*wptr = 0;		 
+        
+		while (NVMCTRL.STATUS & (NVMCTRL_EEBUSY_bm | NVMCTRL_FBUSY_bm));		
 		
+        _isr();
+        
+        while (NVMCTRL.STATUS & (NVMCTRL_EEBUSY_bm | NVMCTRL_FBUSY_bm));
+
+        return true;		
+    }
+    
+	INLN bool Save_Async(uint16_t adr, void* data, uint8_t cnt)
+	{
+		
+		if (GPR.GPR1 & BUSY_GPR1_BIT) return false;
+		GPR.GPR1 |= BUSY_GPR1_BIT;
+
+		_beginSave(adr,data,cnt);		
+		
+		timout = 2;		
 		// критическая секция кода
 		cli();
 		// dummi write EEPROM
@@ -101,6 +155,10 @@ public:
 		
 		return true;
 	}
-	
-	
+    INLN void Read(uint16_t eeprom_adr, uint8_t *data, uint8_t size)
+    {
+        // Read operation will be stalled by hardware if any write is in progress
+        memcpy(data, (uint8_t *)(EEPROM_START + eeprom_adr), size);
+    }
+		
 };

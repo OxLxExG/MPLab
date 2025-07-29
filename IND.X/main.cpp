@@ -6,6 +6,7 @@
  */ 
 #include <stddef.h>
 #include <avr/io.h>
+#include <avr/wdt.h>
 #include <avr/interrupt.h>
 #include <avr/sleep.h>
 #include <ccp.h>
@@ -38,8 +39,8 @@ typedef  struct
 
 
 #define eeprom (*(eep_t*)0x1400)
-#define dataprog (*(eep_nand_t*)0x8000)
-#define dataprog512 (*(bad_bloks_t*)0x8200)
+#define dataprog (*(flash_nand_t*)0x8000)
+#define dataprog512 (*(flash_bad_bloks_t*)0x8200)
 
 
 
@@ -54,13 +55,6 @@ typedef  struct
 //frac: 0.0029  PER=34363  PRESC=2  Corr=-95    10DaysErr : -71.74ms 	7 * 4909
 //frac: 0.0063  PER=34362  PRESC=2  Corr=-66    10DaysErr : -157.41ms   2 * 3 * 3 * 23 * 83
 //frac: 0.0031  PER=17181  PRESC=4  Corr=-66    10DaysErr : -157.41ms ..3 * 3 * 23 * 83
-
-#define Com serial1
-#define DEF_SPEED 125
-
-WorkDataStd_t workData NO_INIT;
-
-errors_t err;
 
 INLN void resetPORTs(void)
 {
@@ -77,11 +71,49 @@ void init3(void) __attribute__ ((naked)) __attribute__ ((section (".init3")));
 void init3(void)
 {
 	resetPORTs();	
-	Indicator.On();
+	//Indicator.On();
 }
 
+#define Com serial1
+#define DEF_SPEED 125
+#define EEP_OFFSET 8
+#define NO_POWER_LEN (sizeof(uint32_t)+sizeof(uint8_t))
+#define EEP_UPDATE_KADRS 900 //30min
+#define DEFAULT_KADR -100000000
+#define WDTO_N WDTO_250MS
+
+EEPROM_T(eep);
+INST_CLOCK;
+
+//F_CPU=8000000UL;
+//ADDRESS_PROCESSOR=6;
+//CLOCK=CLKHT,TA0,CLKNOOUT;
+//DIOD=PB,5,INV;
+//USEUSART1=DEF0,2048,TB0;
+//USEUSART2=DEF0,2048,TB1;
+//MT29F4G=SP1,ALT1,UART1,PD,4,PD,5;
+//AIS2IH=SP0,DEF0,PA,3;
+//INDUC=UART2,PD,3;DEBUG
+        
+indicator_t<DIOD> Indicator;
+static ais2ih_t<AIS2IH> Ais2ih;
+static ram_t<MT29F4G> Ram;
+static Ind_t<INDUC> Ind;
 static uint8_t TurboTimer, TestModeTimer;
 static uint8_t saveLen;
+static uint8_t curTurbo;
+static WorkData_t workData={APP_IDLE,DEFAULT_KADR};
+static volatile uint8_t ResetFunction NO_INIT;
+static int32_t LastKadrEEPChargeUpdate;
+
+static errors_t err;
+
+// виртуальные секции EEPROM
+#define EEP_OFFSET_VOLUME 8 // from 8 len 4
+#define EEP_OFFSET_ERR 16 // from 16 len 8
+#define EEP_OFFSET_ERR_QZ 16+8 // from 16 len 4
+#define EEP_OFFSET_KADR_CHARGE 32 // from 512
+
 //static eep_reis_t CurrentZaezd;
 //static uint16_t saveGK;
 //const eep_t* eep = (eep_t*) EEPROM_START;
@@ -95,11 +127,47 @@ static uint8_t saveLen;
 	//}
 //}
 
+// СОБЫТИЕ: постановка на задержку пользователем
+static void ResetErrorsInEEP(void)
+{
+	eep_errors_t e = {0,0,0,DEFAULT_KADR,DEFAULT_KADR};
+	//eep.Save(EEP_OFFSET_ERR, e, sizeof(eep_errors_t));
+    FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_ERR, (uint8_t*) &e, sizeof(eep_errors_t));							
+	while(FLASH_is_eeprom_ready()); 
+}
+// СОБЫТИЕ: ошибка кварца
+static void SaveQzErrInEEP(void)
+{
+	//eep.Save(EEP_OFFSET_ERR_QZ, &workData.time, 4);
+	FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_ERR_QZ, (uint8_t*) &workData.time, 4);
+	while(FLASH_is_eeprom_ready());
+}
+
+// СОБЫТИЕ: аномальный ресет
+static void SaveResetInEEP(int32_t* restored_kadr)
+{
+	reset_t r;
+	r.ResetCount = eep_errors.reset.ResetCount+1;
+	r.ResetFunction = ResetFunction;
+	r.kadr_Reset = *restored_kadr;
+	r.ResetRegister = RSTCTRL.RSTFR;
+	FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_ERR , (uint8_t*) &r, sizeof(r));
+	while(FLASH_is_eeprom_ready()); // пусть будет 
+}
+
+static void SaveChargeAndStateToEEP_Async(void)
+{
+	LastKadrEEPChargeUpdate = workData.time;	
+	eep.Save(EEP_OFFSET_KADR_CHARGE, &workData.AppState, sizeof(eep_save_state_and_charge_t));
+	//FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_KADR_CHARGE, (uint8_t*) &workData.AppState, sizeof(eep_save_state_and_charge_t));
+}
+
+
 static void TestWorkEvent(uint8_t len)
 {
 	WorkData_t* d = (WorkData_t*)(&Com.buf[DATA_POS]);
 	//d->gk.gk = saveGK;
-	*(WorkDataStd_t*) d = workData;
+	*(WorkDataStd_t*) d = *(WorkDataStd_t*) &workData;
 	if (len > 0)
 	{
 		Induc_t* s = (Induc_t*)(&Ind.buf()[3]);
@@ -128,8 +196,8 @@ static void getMetrEvent(uint8_t len)
 {
 	if (len >0)
 	{
-		memcpy(&Com.buf[DATA_POS], &Ind.buf()[3], sizeof(eep_ind_t));
-		Com.CRCSend(sizeof(eep_ind_t)+HEADER_LEN);
+		memcpy(&Com.buf[DATA_POS], &Ind.buf()[3], sizeof(uart_ind_t));
+		Com.CRCSend(sizeof(uart_ind_t)+HEADER_LEN);
 	}
 }
 static void setMetrEvent(uint8_t len)
@@ -238,7 +306,6 @@ static void GoToSleep(void)
 				//SetModeALL();
 				Ind.off();
 }
-static uint8_t curTurbo;
 static void RunCmd(void)
 {
 	switch (Com.buf[CMD_POS])
@@ -336,10 +403,8 @@ static void RunCmd(void)
 				//stop all int , timers
 				 cli();
 				 Ind.off();
-				 #ifdef EEP_RESET
 				 FLASH_write_eeprom_byte(0, 0);
 				 while(FLASH_is_eeprom_ready());
-				 #endif
 				 ccp_write_io((void *)&RSTCTRL.SWRR, 1);				 
 			}
 		break;
@@ -447,7 +512,7 @@ static void RunCmd(void)
 				else
 				{
 					WorkData_t* d = (WorkData_t*)(&Com.buf[DATA_POS]);
-					*(WorkDataStd_t*) d = workData;					
+					*(WorkDataStd_t*) d = *(WorkDataStd_t*) &workData;					
 					memset(&d->dat, 0, sizeof(Induc_t));
 					d->AppState |= 0x40;
 					d->AppState |= 0x80;
@@ -521,7 +586,7 @@ static bool CheckNAND()
 			param_page_t pp;
 			if (Ram.NAND_Read_Param_Page(&pp))
 			{
-				eep_nand_t n;
+				flash_nand_t n;
 				memset(&n,0xff,sizeof(n));
 				memcpy(&n.manufacturer, &pp.manufacturer, sizeof(n.manufacturer));
 				memcpy(&n.model, &pp.model, sizeof(n.model));
@@ -744,6 +809,7 @@ int main(void)
 		}
 		if ( Clock.checkReadyTik()) 
 		{
+   			eep.Handler();			
 			Indicator.Handler64(workData.AppState); 				
 			Ind.handler70ms();
 		};

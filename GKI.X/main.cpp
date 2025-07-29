@@ -10,6 +10,8 @@
 // -T c:\AVR\avrxmega4.x - misc опция линкера ДОБАВИТЬ!!! -AVR128Dx
  */ 
 
+#define FULL_DUPLEX
+
 #include <avr/io.h>
 #include <avr/sleep.h>
 #include <avr/wdt.h>
@@ -298,16 +300,16 @@ static void StandBy(bool fullStop)
 static void ResetErrorsInEEP(void)
 {
 	eep_errors_t e = {0,0,0,DEFAULT_KADR,DEFAULT_KADR};
-	//eep.Save(EEP_OFFSET_ERR, e, sizeof(eep_errors_t));
-	FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_ERR, (uint8_t*) &e, sizeof(eep_errors_t));
-	while(FLASH_is_eeprom_ready());
+	eep.Save(EEP_OFFSET_ERR, &e, sizeof(eep_errors_t));
+	//FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_ERR, (uint8_t*) &e, sizeof(eep_errors_t));
+	//while(FLASH_is_eeprom_ready());
 }
 // СОБЫТИЕ: ошибка кварца
 static void SaveQzErrInEEP(void)
 {
-	//eep.Save(EEP_OFFSET_ERR_QZ, &workData.time, 4);
-	FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_ERR_QZ, (uint8_t*) &workData.time, 4);
-	while(FLASH_is_eeprom_ready());
+	eep.Save(EEP_OFFSET_ERR_QZ, &workData.time, 4);
+	//FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_ERR_QZ, (uint8_t*) &workData.time, 4);
+	//while(FLASH_is_eeprom_ready());
 }
 // СОБЫТИЕ: аномальный ресет
 static void SaveResetInEEP(int32_t* restored_kadr)
@@ -317,8 +319,9 @@ static void SaveResetInEEP(int32_t* restored_kadr)
 	r.ResetFunction = ResetFunction;
 	r.kadr_Reset = *restored_kadr;
 	r.ResetRegister = RSTCTRL.RSTFR;
-	FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_ERR , (uint8_t*) &r, sizeof(r));
-	while(FLASH_is_eeprom_ready()); // пусть будет
+    eep.Save(EEP_OFFSET_ERR, &r, sizeof(r));
+	//FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_ERR , (uint8_t*) &r, sizeof(r));
+	//while(FLASH_is_eeprom_ready()); // пусть будет
 }
 static void SaveChargeAndStateToEEP_Async(void)
 {
@@ -326,7 +329,7 @@ static void SaveChargeAndStateToEEP_Async(void)
 	e.kadr = *(save_state_t*) &workData;
 	e.charge = workData.charge;
 	LastKadrEEPChargeUpdate = workData.time;
-	eep.Save(EEP_OFFSET_KADR_CHARGE, &e, sizeof(eep_save_state_and_charge_t));
+	eep.Save_Async(EEP_OFFSET_KADR_CHARGE, &e, sizeof(eep_save_state_and_charge_t));
 }
 static void UpdateFromEEP(void)
 {
@@ -537,10 +540,13 @@ static void RunCmd(void)
 		case CMD_BOOT:
 			if (*(uint32_t*)(&Com.buf[DATA_POS]) == 0x12345678)
 			{
-				cli();
-				FLASH_write_eeprom_byte(0, 0);
-				while(FLASH_is_eeprom_ready());
-                ccp_write_io((void *)&RSTCTRL.SWRR, 1);
+			cli();	
+            eep.Save(0, (uint8_t*)"\0",1);
+			ccp_write_io((void *)&RSTCTRL.SWRR, 1);                
+//				cli();
+//				FLASH_write_eeprom_byte(0, 0);
+//				while(FLASH_is_eeprom_ready());
+//                ccp_write_io((void *)&RSTCTRL.SWRR, 1);
 			}
 		break;
 		case CMD_ERAM:
@@ -568,17 +574,20 @@ static void RunCmd(void)
 			}
 			else if (from == 8)// vat_vol
 			{
-				FLASH_read_eeprom_block((eeprom_adr_t) EEP_OFFSET_VOLUME, dptr, n);
+                eep.Read(EEP_OFFSET_VOLUME, dptr, n);
+				//FLASH_read_eeprom_block((eeprom_adr_t) EEP_OFFSET_VOLUME, dptr, n);
 				Com.CRCSend(n+HEADER_LEN);
 			}
 			else if (from == 16)// eep_errors_t
 			{
-				FLASH_read_eeprom_block((eeprom_adr_t) EEP_OFFSET_ERR, dptr, n);
+                eep.Read(EEP_OFFSET_ERR, dptr, n);
+				//FLASH_read_eeprom_block((eeprom_adr_t) EEP_OFFSET_ERR, dptr, n);
 				Com.CRCSend(n+HEADER_LEN);
 			}
 			else if (from == 512) // eep_save_state_t + charge_t
 			{
-				FLASH_read_eeprom_block((eeprom_adr_t) EEP_OFFSET_KADR_CHARGE, dptr, n);
+                eep.Read(EEP_OFFSET_KADR_CHARGE, dptr, n);
+//				FLASH_read_eeprom_block((eeprom_adr_t) EEP_OFFSET_KADR_CHARGE, dptr, n);
 				Com.CRCSend(n+HEADER_LEN);
 			}
 			else if (from == 1024) // daclevel (*(eep_nnk_dac_t*)0x8200)
@@ -619,7 +628,7 @@ static void RunCmd(void)
 				{
 					//	ltc2942.ResetCharge();
 					float data = 0;
-					FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_KADR_CHARGE + sizeof(save_state_t)
+					eep.SaveBytes(EEP_OFFSET_KADR_CHARGE + sizeof(save_state_t)
 					+ offsetof(charge_t,AccCharge) , (uint8_t*) &data, sizeof(float));
 					b->ResetFlag = 0;
 					FLASH_write_flash_n(0x400, dptr, n+2);
@@ -627,11 +636,11 @@ static void RunCmd(void)
 			}
 			else if (from == 8) // vat_vol
 			{
-				FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_VOLUME, dptr, n);
+				eep.SaveBytes(EEP_OFFSET_VOLUME, dptr, n);
 			}
 			else if (from == 512) // charge_t
 			{
-				FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_KADR_CHARGE, dptr, n);
+				eep.SaveBytes(EEP_OFFSET_KADR_CHARGE, dptr, n);
 			}
 			else if (from == 1024) // daclevel (*(eep_nnk_dac_t*)0x8200)
 			{
@@ -732,7 +741,11 @@ int main(void)
 
 	LastKadrEEPChargeUpdate = workData.time;
 	
+    
 	Com.setRS485mode();
+	#ifdef FULL_DUPLEX
+    	Com.setFullDuplexmode();
+	#endif	
 	Com.setBaud(DEF_SPEED);
 	Com.intMode();
 	Com.enableRxD();

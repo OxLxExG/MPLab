@@ -154,5 +154,3 @@ public:
 		return IndUart.buf;
 	}
 };
-
-extern Ind_t<INDUC> Ind;

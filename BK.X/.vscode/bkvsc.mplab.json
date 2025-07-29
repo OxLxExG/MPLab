@@ -1,0 +1,95 @@
+{
+    "version": "1.5",
+    "configurations": [
+        {
+            "name": "default",
+            "id": "",
+            "device": "AVR128DB48",
+            "imageType": "application",
+            "imagePath": "./out/bkvsc/default.elf",
+            "toolProperties": "default-tool-base",
+            "tool": "Simulator",
+            "packs": [
+                {
+                    "name": "AVR-Dx_DFP",
+                    "vendor": "Microchip",
+                    "version": "2.7.321"
+                }
+            ],
+            "fileSet": "default",
+            "toolchain": "default-AVR-GCC",
+            "preBuildSteps": [
+                "",
+                "..\\\\p.bat %{ProjectPath}"
+            ],
+            "postBuildSteps": [
+                "..\\\\evsc.bat %{ProjectName} %{ProjectPath} %{TargetPath}"
+            ]
+        }
+    ],
+    "propertyGroups": [
+        {
+            "name": "default-AVR-GCC",
+            "type": "toolchain",
+            "provider": "microchip.toolchains:avr-gcc@7.3.0",
+            "properties": {
+                "global.common-include-directories": [
+                    "./_I",
+                    "../_Inc"
+                ],
+                "global.lss": true,
+                "compiler.optimization-level": "-Os",
+                "compiler++.optimization-level": "-Os",
+                "compiler++.preprocessor-macros": [
+                    "F_CPU=8000000UL",
+                    "ADDRESS_PROCESSOR=6",
+                    "CLOCK=CLKHT,TA0,CLKNOOUT",
+                    "POWER=PD,3",
+                    "BK128=UART2",
+                    "USEUSART1=DEF0,255,TB1",
+                    "USEUSART2=DEF0,255,TB2",
+                    "MT29F4G=SP1,ALT1,UART1,PD,4",
+                    "AIS2IH=SP0,DEF0,PA,7",
+                    "DEBUG"
+                ],
+                "linker.flash-segment": [
+                    ".text=0x1000"
+                ],
+                "linker.other-options": [
+                    "-T ..\\\\..\\\\..\\\\..\\\\avrxmega4.x",
+                    "-Wl,-section-start=.text=0x2000"
+                ]
+            }
+        },
+        {
+            "name": "default-tool-base",
+            "type": "tool",
+            "properties": {}
+        },
+        {
+            "name": "default-tool-base",
+            "type": "tool",
+            "properties": {}
+        },
+        {
+            "name": "default-tool-base",
+            "type": "tool",
+            "properties": {}
+        }
+    ],
+    "fileSets": [
+        {
+            "name": "default",
+            "files": [
+                {
+                    "include": "*.cpp",
+                    "exclude": "**/(_build|out|cmake|.vscode)/**/*"
+                },
+                "../_Lib/crc.S",
+                "../_Lib/protected_io.S",
+                "../_Lib/usarts.cpp"
+            ],
+            "encoding": "Code page 1251"
+        }
+    ]
+}

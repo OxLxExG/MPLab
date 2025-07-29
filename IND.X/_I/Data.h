@@ -1,16 +1,18 @@
 #pragma  once
+#include <avr/io.h>
 
 namespace induc
 {
 	
-	
+// flash	
 typedef struct __attribute__((packed))
 {
 	//- ShowHex
 	uint16_t bad_blocks[40];
-} bad_bloks_t;
+} flash_bad_bloks_t;
 
 
+// flash	
 typedef struct __attribute__((packed))
 {
 	//-color=0x000000FF
@@ -36,25 +38,31 @@ typedef struct __attribute__((packed))
 	/** Guaranteed valid blocks at beginning of target */
 	//-ShowHex
 	uint8_t guarenteed_valid_blocks;
-} eep_nand_t;
-
+} flash_nand_t;
 
 typedef struct __attribute__((packed))
 {
-	//-color = 0x00FF0000
-	uint32_t signature;
-	//-color = 0x001FFF00
-	uint32_t serial;
-	uint16_t L1[8];
-	uint16_t L2[8];
-	uint16_t F[8];
-	int16_t Air_zz[8];
-    //-name=сдвиг_между_квадратурами
-	uint16_t PhaseOffsets[4];
-	uint32_t D_sonde_mm;
-	int16_t Air_zz_amt[8];//
-	uint16_t service[70];//
-} eep_ind_t;
+	//-readonly
+	uint16_t ResetCount;	
+	//-readonly
+	uint8_t ResetFunction;	
+	//-readonly
+	uint8_t ResetRegister;
+	//- name=восстановленый_кадр
+	//- metr=WT
+	//-readonly
+	int32_t kadr_Reset;
+} reset_t;
+
+typedef struct __attribute__((packed))
+{
+	//- name=ResetErr
+	reset_t reset; //8
+	//- name=время_qzErr
+	//- metr=WT
+	//-readonly
+	int32_t kadr_qzErr;	//4
+} eep_errors_t; //12 
 
  //- name=текущий_рейс
  typedef struct __attribute__((packed))
@@ -80,8 +88,6 @@ typedef struct __attribute__((packed))
 
 typedef struct __attribute__((packed))
 {
-	//-color = 0x00FF0000
-	uint8_t ResetReserv;
 	//-name=текущий_рейс
 	eep_current_reis_t Currentwreis;
 	//- name=история_рейсов
@@ -116,13 +122,31 @@ typedef struct __attribute__((packed))
 
 typedef struct __attribute__((packed))
 {
+	//-color = 0x00FF0000
+	uint32_t signature;
+	//-color = 0x001FFF00
+	uint32_t serial;
+	uint16_t L1[8];
+	uint16_t L2[8];
+	uint16_t F[8];
+	int16_t Air_zz[8];
+    //-name=сдвиг_между_квадратурами
+	uint16_t PhaseOffsets[4];
+	uint32_t D_sonde_mm;
+	int16_t Air_zz_amt[8];//
+	uint16_t service[70];//
+} uart_ind_t;
+
+
+typedef struct __attribute__((packed))
+{
 	//- from=0
-	eep_nand_t NAND;
+	flash_nand_t NAND;
 	//- from=512
-	bad_bloks_t BadBlocks;
+	flash_bad_bloks_t BadBlocks;
 	//- from=1024
 	//- name=Ind
-	eep_ind_t metrInd;
+	uart_ind_t metrInd;
 	//- from=2048
 	eep_ram_t ramData;
 	//- from=4096

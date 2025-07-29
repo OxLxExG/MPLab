@@ -87,77 +87,77 @@ inline nvmctrl_status_t FLASH_write_flash_n(uint16_t from,  uint8_t *data, uint8
 	return NVM_OK;
 }
 
-/**
- * \brief Write a block to eeprom
- *
- * \param[in] eeprom_adr The byte-address in eeprom to write to
- * \param[in] data The buffer to write
- *
- * \return Status of write operation
- */
-inline nvmctrl_status_t FLASH_write_eeprom_block(eeprom_adr_t eeprom_adr, uint8_t *data, size_t size)
-{
-	uint8_t *write = (uint8_t *)(EEPROM_START + eeprom_adr);
-
-	/* Wait for completion of previous operation */
-	while (NVMCTRL.STATUS & (NVMCTRL_EEBUSY_bm | NVMCTRL_FBUSY_bm))
-		;
-
-	/* Program the EEPROM with desired value(s) */
-	ccp_write_spm((void *)&NVMCTRL.CTRLA, NVMCTRL_CMD_EEERWR_gc);
-
-	do {
-		/* Write byte to EEPROM */
-		*write++ = *data++;
-		size--;
-	} while (size != 0);
-
-	/* Clear the current command */
-	ccp_write_spm((void *)&NVMCTRL.CTRLA, NVMCTRL_CMD_NONE_gc);
-
-	return NVM_OK;
-}
-
-/**
- * \brief Check if the EEPROM can accept data to be read or written
- *
- * \return The status of EEPROM busy check
- * \retval false The EEPROM can not receive data to be read or written
- * \retval true The EEPROM can receive data to be read or written
- */
-inline bool FLASH_is_eeprom_ready()
-{
-	return (NVMCTRL.STATUS & (NVMCTRL_EEBUSY_bm | NVMCTRL_FBUSY_bm));
-}
-
-/**
- * \brief Write a byte to eeprom
- *
- * \param[in] eeprom_adr The byte-address in eeprom to write to
- * \param[in] data The byte to write
- *
- * \return Status of write operation
- */
-inline nvmctrl_status_t FLASH_write_eeprom_byte(eeprom_adr_t eeprom_adr, uint8_t data)
-{
-	/* Wait for completion of previous operation */
-	while (NVMCTRL.STATUS & (NVMCTRL_EEBUSY_bm | NVMCTRL_FBUSY_bm))
-		;
-
-	/* Program the EEPROM with desired value(s) */
-	ccp_write_spm((void *)&NVMCTRL.CTRLA, NVMCTRL_CMD_EEERWR_gc);
-
-	/* Write byte to EEPROM */
-	*(uint8_t *)(EEPROM_START + eeprom_adr) = data;
-
-	/* Clear the current command */
-	ccp_write_spm((void *)&NVMCTRL.CTRLA, NVMCTRL_CMD_NONE_gc);
-
-	return NVM_OK;
-}
-
-inline void FLASH_read_eeprom_block(eeprom_adr_t eeprom_adr, uint8_t *data, size_t size)
-{
-// Read operation will be stalled by hardware if any write is in progress
-memcpy(data, (uint8_t *)(EEPROM_START + eeprom_adr), size);
-}
+///**
+// * \brief Write a block to eeprom
+// *
+// * \param[in] eeprom_adr The byte-address in eeprom to write to
+// * \param[in] data The buffer to write
+// *
+// * \return Status of write operation
+// */
+//inline nvmctrl_status_t FLASH_write_eeprom_block(eeprom_adr_t eeprom_adr, uint8_t *data, size_t size)
+//{
+//	uint8_t *write = (uint8_t *)(EEPROM_START + eeprom_adr);
+//
+//	/* Wait for completion of previous operation */
+//	while (NVMCTRL.STATUS & (NVMCTRL_EEBUSY_bm | NVMCTRL_FBUSY_bm))
+//		;
+//
+//	/* Program the EEPROM with desired value(s) */
+//	ccp_write_spm((void *)&NVMCTRL.CTRLA, NVMCTRL_CMD_EEERWR_gc);
+//
+//	do {
+//		/* Write byte to EEPROM */
+//		*write++ = *data++;
+//		size--;
+//	} while (size != 0);
+//
+//	/* Clear the current command */
+//	ccp_write_spm((void *)&NVMCTRL.CTRLA, NVMCTRL_CMD_NONE_gc);
+//
+//	return NVM_OK;
+//}
+//
+///**
+// * \brief Check if the EEPROM can accept data to be read or written
+// *
+// * \return The status of EEPROM busy check
+// * \retval false The EEPROM can not receive data to be read or written
+// * \retval true The EEPROM can receive data to be read or written
+// */
+//inline bool FLASH_is_eeprom_ready()
+//{
+//	return (NVMCTRL.STATUS & (NVMCTRL_EEBUSY_bm | NVMCTRL_FBUSY_bm));
+//}
+//
+///**
+// * \brief Write a byte to eeprom
+// *
+// * \param[in] eeprom_adr The byte-address in eeprom to write to
+// * \param[in] data The byte to write
+// *
+// * \return Status of write operation
+// */
+//inline nvmctrl_status_t FLASH_write_eeprom_byte(eeprom_adr_t eeprom_adr, uint8_t data)
+//{
+//	/* Wait for completion of previous operation */
+//	while (NVMCTRL.STATUS & (NVMCTRL_EEBUSY_bm | NVMCTRL_FBUSY_bm))
+//		;
+//
+//	/* Program the EEPROM with desired value(s) */
+//	ccp_write_spm((void *)&NVMCTRL.CTRLA, NVMCTRL_CMD_EEERWR_gc);
+//
+//	/* Write byte to EEPROM */
+//	*(uint8_t *)(EEPROM_START + eeprom_adr) = data;
+//
+//	/* Clear the current command */
+//	ccp_write_spm((void *)&NVMCTRL.CTRLA, NVMCTRL_CMD_NONE_gc);
+//
+//	return NVM_OK;
+//}
+//
+//inline void FLASH_read_eeprom_block(eeprom_adr_t eeprom_adr, uint8_t *data, size_t size)
+//{
+//// Read operation will be stalled by hardware if any write is in progress
+//memcpy(data, (uint8_t *)(EEPROM_START + eeprom_adr), size);
+//}

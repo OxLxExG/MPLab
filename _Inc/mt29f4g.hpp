@@ -1,5 +1,8 @@
-#ifndef MT294_HPP_
-#define MT294_HPP_
+#pragma once
+ 
+
+
+
 
 //#define  TEST_RAM_EMULATE_BAD
 
@@ -11,11 +14,8 @@
 #include <clock.hpp>
 #include <tools.h>
 #include <crc.h>
+#ifdef DIOD
 #include <Indicator.hpp>
-
-#if !defined(MT29F4G)
-# error "Global define MT29F4G=SPn,muxAlt,uart,PORTCS1,BITCS1,PORTCS2,BITCS2"
-  // MT29F4G=SP0,DEF0,PA,7,PA,8,UART1
 #endif
 
 //#ifdef Uart
@@ -70,6 +70,23 @@ typedef struct {
 //#pragma message(VAR_NAME_VALUE(SPI_UART_N))
 
 //#define PP_TIMAUT_MS(ms) (2*ms)
+
+    typedef enum {
+        NAND_OK =         0,
+        NAND_BAD_RESET =  1<<0,
+        NAND_BAD_RCOL_1 =   1<<1, 
+        NAND_BAD_RCOL_2 = 1<<2,    
+        NAND_BAD_RCOL_3 = 1<<3,        
+        NAND_NOT_FORMATED = 1<<4,        
+        NAND_BAD_CH_FORMAT_REI = 1<<5,        
+        NAND_BAD_CH_FORMAT_BLO = 1<<6,        
+        NAND_BAD_REIS =   1<<7,
+        NAND_BAD_EEPROM_CURSOR = 1<<8,
+        NAND_BAD_BLOCK = 1<<9,
+        NAND_BAD_RESTORE_1 = 1<<10,        
+        NAND_BAD_RESTORE_2 = 1<<11,        
+        NAND_BAD_RESTORE_3 = 1<<12,        
+    } nand_errors_t;
 
     typedef enum {
 	    SPI_NAND_CRBSY = (1 << 7), // Cache Read Busy 
@@ -253,17 +270,6 @@ typedef struct  {
 
 } param_page_t;
 
-static uint16_t __as_uint16(uint8_t byte1, uint8_t byte0) {
-		return  ((uint16_t)byte0 << 8) | byte1;
-}
-static uint32_t __as_uint32(uint8_t byte3, uint8_t byte2, uint8_t byte1, uint8_t byte0) {
-		return ((uint32_t) (((uint32_t)byte0 << 24) | ((uint32_t)byte1 << 16) | ((uint16_t)byte2 << 8) | byte3));
-}
-static void __as_string(uint8_t *src_ptr, char *dest_ptr, int start, int stop) {
-		strncpy((char *)dest_ptr, (const char *)src_ptr+start, stop-start+1);
-		dest_ptr[stop-start+1] = '\0';
-}
-
 
  // physical address macros; Input address must be of type NAND_Addr 
  //#define ADDRESS_2_BLOCK(Address)    ((uint16_t) (Address >> 17))   // divide by 131072 (2^17 bytes per block)
@@ -271,17 +277,13 @@ static void __as_string(uint8_t *src_ptr, char *dest_ptr, int start, int stop) {
  //#define ADDRESS_2_COL(Address)      ((uint32_t) (Address & 0x07FF)) // take last 11 bits of address
 
 
-template <uint8_t spiNo, uint8_t pmuxAlt, uint8_t serialNo, uint8_t portCS1, uint8_t bitCS1,uint8_t portCS2, uint8_t bitCS2>
+template <uint8_t spiNo, uint8_t pmuxAlt, uint8_t serialNo, uint8_t portCS1, uint8_t bitCS1>
 class ram_t 
 {
-	    //#define URT serial##serialNo
 		#define SPI (*(SPI_t*) (0x0940 + 0x20 * spiNo))
-		//#define TB (*(TCB_t*) (0x0B00 + 0x10 * timerNo))
 		#define PCS_1 (*(PORT_t*) (0x0400 + 0x20 * portCS1))
-		//#define PCS_2 (*(PORT_t*) (0x0400 + 0x20 * portCS2))
 public:
-//uint8_t chip;
-
+    void (*Callback)(nand_errors_t);
    // for writing   
 	RowAddrs waddr;
 	reis_t wreis;
@@ -290,6 +292,7 @@ public:
 	uint16_t pageCnt;
 	
 	lastReisInfo_t LastReis;
+    uint16_t CurrReisStartBlock;
 	//длина запроса в б. п. кол.
 	uint32_t rlen;
 	//uint16_t LenCol;
@@ -302,7 +305,27 @@ public:
 	uint32_t rlogadr;
 	uint16_t rBlocksToEnd;
 	reis_t  rreis;
+        
 	
+INLN uint16_t __as_uint16(uint8_t byte1, uint8_t byte0) {
+		return  ((uint16_t)byte0 << 8) | byte1;
+}
+INLN uint32_t __as_uint32(uint8_t byte3, uint8_t byte2, uint8_t byte1, uint8_t byte0) {
+		return ((uint32_t) (((uint32_t)byte0 << 24) | ((uint32_t)byte1 << 16) | ((uint16_t)byte2 << 8) | byte3));
+}
+INLN void __as_string(uint8_t *src_ptr, char *dest_ptr, int start, int stop) {
+		strncpy((char *)dest_ptr, (const char *)src_ptr+start, stop-start+1);
+		dest_ptr[stop-start+1] = '\0';
+}
+    
+INLN void CallbackRegister(void (*callbackHandler)(nand_errors_t))
+{
+	if (callbackHandler != NULL)
+	{
+		Callback = callbackHandler;
+	}
+}
+    
 	uint8_t lastStatus;
 	INLN PORT_t* getSPIPort(void)
 	{
@@ -356,15 +379,11 @@ public:
 	}
     INLN void CS_on(void) 
 	{
-		//if(chip == 1) 
 			PCS_1.OUTCLR = 1 << bitCS1; 
-		//else 
-		//	PCS_2.OUTCLR = 1 << bitCS2;
 	}
     INLN void CS_off(void)
 	{
 		PCS_1.OUTSET = 1 << bitCS1; 
-		//PCS_2.OUTSET = 1 << bitCS2;
 	}		
     INLN void init(void)
 	{
@@ -603,7 +622,134 @@ public:
 		LastReis.blocks = cur.block;
 		LastReis.startBlock = (cur.block == 0) ? a.block : 0xFFFF;
 		LastReis.endBlock = a.block;
-	}	
+	}
+
+    //// 1. нулевая страница точно записана
+    //// 2. длина кадра меньше длины страницы (пока)
+    //// 3. 
+    
+    INLN bool _IsEmptyPage(void)
+    {
+         loadCol c = {0};
+         uint8_t b[128];
+         CacheRead(&c, b, 128); 
+         for (uint8_t i=0;i<128;i++) if (b[i] != 0xFF) return false;
+         return true;        
+    }
+    INLN bool _ReadNextPade(RowAddrs* a)
+    {
+        a->page++;
+        if (a->page != 0)
+        {
+          BeginPageRead(a);
+          return _IsEmptyPage();
+        }
+        else return true;        
+    }
+    
+    #define N_KADR(x) (x>PAGE_DATA_SIZE-4?PAGE_DATA_SIZE-x:4)
+
+    #define FN_KADR(x) \
+            nKadr = x>PAGE_DATA_SIZE-4?PAGE_DATA_SIZE-x:4;  \
+            if (nKadr != 4) { loadCol c = {x}; CacheRead(&c, &read_kadr.B[0], nKadr); IsEmpty = _ReadNextPade(&waddr);} 
+
+
+    
+	INLN bool Restore(lastReisInfo_t* lastEepromReis, uint16_t len, int32_t* lastKadr)
+	{
+        if (lastEepromReis->reis == LastReis.reis && lastEepromReis->startBlock == LastReis.startBlock)
+        {
+            // Restore
+            unio32_t read_kadr;
+            uint32_t expect_kadr;
+            uint8_t nKadr;            
+            bool IsEmpty;
+            
+            rlogadr = 0xFFFFFFFF;
+            wreis.reis = LastReis.reis;
+            wreis.block = LastReis.blocks-1;
+            CurrReisStartBlock = LastReis.startBlock;
+
+            uint32_t ba = (LastReis.blocks-1) * PAGE_DATA_SIZE * NUM_PAGES_PER_BLOCK; // адрес текущего (записываемого) блока
+            pageCnt = ba % len; // next kadr in page 
+            expect_kadr = 1 + ba / len;
+            
+            waddr.block = LastReis.endBlock; 
+            waddr.page = 0;
+            
+            init();
+            
+            BeginPageRead(&waddr);
+            // метка рейса пишется при записи нулевой страницы
+            // поэтому IsEmpty = false
+            IsEmpty = _IsEmptyPage(); 
+            
+            FN_KADR(pageCnt);         
+            
+            while (true)
+            {
+                if (IsEmpty)
+                {
+                    unlockAllBlock();                    
+                    // восстановить pageCnt waddr wreis и т.д.
+                    if (nKadr != 4)
+                    {
+                       // восстановить разрыв кадра в начале страницы                        
+                        unio32_t* k = (unio32_t*) &expect_kadr;
+                        for (uint8_t i = nKadr; i<4; i++) page[i-nKadr] = k->B[i];
+                        // дозаполним остаток кадра
+                        pageCnt += len-nKadr;
+                        expect_kadr++;
+                    }
+                    //pageCnt = page_index;
+                    *lastKadr = expect_kadr-1;
+                    // полный блок (произошло отключение при заполнении кадрами 0 страницы хорошего блока)
+                    if (waddr.page == 0)
+                    {
+       					wreis.block++;
+ 
+                        return NextEraseToGood();
+                    }
+                    return true;                          
+                }
+                else
+                {
+                    if (nKadr == 4)
+                    {
+                        loadCol c = {pageCnt};
+                        CacheRead(&c, &read_kadr.B[0], 4);
+                        pageCnt += len;
+                    }
+                    else
+                    {
+                        loadCol c = {0};
+                        CacheRead(&c, &read_kadr.B[nKadr], 4-nKadr);
+                        pageCnt += len-nKadr;
+                    }
+                    if ((uint32_t)read_kadr.u32 != expect_kadr)
+                    {
+                       if (Callback != NULL) Callback(NAND_BAD_RESTORE_1);
+                       return false;
+                    }
+                    expect_kadr++;
+                    if (pageCnt > PAGE_DATA_SIZE)
+                    {
+                        pageCnt -= PAGE_DATA_SIZE;
+                        IsEmpty = _ReadNextPade(&waddr);
+                        if (IsEmpty) continue;
+                    }
+                    FN_KADR(pageCnt);            
+                }
+            }
+            deinit();
+        }
+        else
+        {
+            if (Callback != NULL) Callback(NAND_BAD_RESTORE_2); 
+            return false;
+        }
+    }		
+	
     bool NAND_CheckFormat(void)
 	{
 		init();
@@ -664,15 +810,16 @@ public:
 		}
 		deinit();	
 		LastReis.blocks++;
+        if (Callback != NULL && badblcnt != 0) Callback(NAND_BAD_CH_FORMAT_BLO);
+        if (Callback != NULL && badzaezd > 1) Callback(NAND_BAD_CH_FORMAT_REI);
 		return badblcnt == 0 && badzaezd <= 1;	
 	}
 	
-	void NAND_CheckBadBlocks(uint16_t* bb)
+	void NAND_CheckBadBlocks(uint16_t* bb, uint8_t cnt)
 	{
 		RowAddrs a ={0, 0};
 		uint8_t badIdx =0;
 		
-		//Ram.chip = die+1;
 		init();
 		for (uint16_t i =0; i < 2048; i++)
 		{
@@ -682,7 +829,8 @@ public:
 			if (bad != 0xFF)
 			{
 				bb[badIdx++] = i;
-				if (badIdx == 40)
+                if (Callback != NULL) Callback(NAND_BAD_BLOCK);
+				if (badIdx == cnt)
 				{
 					deinit();
 					return;
@@ -713,6 +861,10 @@ public:
 		init();
 		while (cnt++ < 40 && SkipBlock(&a,&z)) a.block++;
 		deinit();
+        if (cnt >= 20)
+        {
+            if (Callback != NULL) Callback(NAND_NOT_FORMATED);
+        }    
 		return cnt >= 20;
 	}
 	INLN void NAND_Format(void)
@@ -957,11 +1109,13 @@ public:
 			}
 		}				
 	}		
-	bool write(uint8_t *buf, buf_len_t cnt)
+	bool write(void* vbuf, buf_len_t cnt)
 	{
 		bool res = true;
+        uint8_t* buf = (uint8_t*) vbuf;
 		if (pageCnt + cnt >= PAGE_DATA_SIZE)
 		{
+            
 			uint8_t pc = PAGE_DATA_SIZE - pageCnt;
 			memcpy( &page[pageCnt], buf, pc);
 			init();
@@ -1034,8 +1188,13 @@ public:
 	{
 		return false;
 	}
-	
-	bool initWCursor(void)
+	bool CheckReis(lastReisInfo_t* lr)
+    {
+        bool res = lr->endBlock == waddr.block && lr->reis == wreis.reis && lr->blocks == wreis.block && lr->startBlock == CurrReisStartBlock;
+        if (!res && Callback != NULL) Callback(NAND_BAD_EEPROM_CURSOR); 
+        return res;
+    }
+	bool InitNewReis(void)
 	{
 		pageCnt = 0;
 		init();
@@ -1043,21 +1202,22 @@ public:
 		waddr.block = LastReis.endBlock;
 		waddr.page = 0;
 		wreis.reis = LastReis.reis+1;
-		wreis.block =0;
+		wreis.block = 0;
 		unlockAllBlock();
 		bool res = NextEraseToGood();
+        CurrReisStartBlock = waddr.block;
 		deinit();
 		return res;
 	}
 	INLN void ResetPageBase(void) 
 	{
-		if (!WCursorStatus) initWCursor();
+		if (!WCursorStatus) InitNewReis();
 		WCursorStatus = false;
-	}		
-		
+	}
+    
 	INLN bool startClear(void)
 	{
-		 WCursorStatus = initWCursor();
+		 WCursorStatus = InitNewReis();
 		return true;
 	}
 	INLN bool checkReadReady(void)
@@ -1077,7 +1237,8 @@ public:
 			
 			if (z.reis != rreis.reis || rBlocksToEnd == 0)
 			{
-				Indicator.SetCriticalError2();
+                if (Callback != NULL) Callback(NAND_BAD_REIS);
+				//Indicator.SetCriticalError2();
 				return false;
 			}
 			//next block
@@ -1150,7 +1311,9 @@ public:
 		rcol += *chunk;
 		if (rcol > PAGE_DATA_SIZE)
 		{
-			Indicator.SetCriticalError2();
+			//Indicator.SetCriticalError2();
+           if (Callback != NULL) Callback(NAND_BAD_RCOL_1);
+
 		}
 		//else if (rcol == PAGE_DATA_SIZE) rcol = 0;
 	}
@@ -1159,7 +1322,8 @@ public:
 		if (rlen == 0) return false;
 		if (rcol != PAGE_DATA_SIZE)
 		{
-			Indicator.SetCriticalError2();
+			//Indicator.SetCriticalError2();
+            if (Callback != NULL) Callback(NAND_BAD_RCOL_2);
 			return false;
 		}
 		else {
@@ -1172,7 +1336,8 @@ public:
 		rcol += *chunk;
 		if (rcol > PAGE_DATA_SIZE)
 		{
-			Indicator.SetCriticalError2();
+            if (Callback != NULL) Callback(NAND_BAD_RCOL_3);
+			//Indicator.SetCriticalError2();
 		}
 		//else if (rcol == PAGE_DATA_SIZE) rcol = 0;
 		BeginPageRead(&raddr);
@@ -1231,13 +1396,17 @@ public:
 			}			
 			RUart.intMode();
 			RUart.enableRxD();
+            #ifdef DIOD
 			Indicator.Not();			
+            #endif
 		}
 		//CS_off();
 		deinit();
 	}
 };
 
-extern ram_t<MT29F4G> Ram;
+#if !defined(MT29F4G)
+# error "Global define MT29F4G=SPn,muxAlt,uart,PORTCS1,BITCS1"
+  // MT29F4G=SP0,DEF0,PA,7,PA,8,UART1
+#endif
 
-#endif // USARTS_H_ 
