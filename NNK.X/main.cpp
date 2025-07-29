@@ -55,7 +55,7 @@ void init3(void) __attribute__ ((naked)) __attribute__ ((section (".init3")));
 void init3(void)
 {
 	resetPORTs();
-	for (uint16_t i = 0x4000; i<0x8000; i++) *(uint8_t*) i = 0xAA; 
+//	for (uint16_t i = 0x4000; i<0x8000; i++) *(uint8_t*) i = 0xAA; 
 }
 
 
@@ -130,16 +130,12 @@ static void WakeUp()
 static void ResetErrorsInEEP(void)
 {
 	eep_errors_t e = {0,0,0,DEFAULT_KADR,DEFAULT_KADR};
-	//eep.Save(EEP_OFFSET_ERR, e, sizeof(eep_errors_t));
-    FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_ERR, (uint8_t*) &e, sizeof(eep_errors_t));							
-	while(FLASH_is_eeprom_ready()); 
+	eep.Save(EEP_OFFSET_ERR, &e, sizeof(eep_errors_t));
 }
 // СОБЫТИЕ: ошибка кварца
 static void SaveQzErrInEEP(void)
 {
-	//eep.Save(EEP_OFFSET_ERR_QZ, &workData.time, 4);
-	FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_ERR_QZ, (uint8_t*) &workData.time, 4);
-	while(FLASH_is_eeprom_ready());
+	eep.Save(EEP_OFFSET_ERR_QZ, &workData.time, 4);
 }
 
 // СОБЫТИЕ: аномальный ресет
@@ -150,21 +146,13 @@ static void SaveResetInEEP(int32_t* restored_kadr)
 	r.ResetFunction = ResetFunction;
 	r.kadr_Reset = *restored_kadr;
 	r.ResetRegister = RSTCTRL.RSTFR;
-	FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_ERR , (uint8_t*) &r, sizeof(r));
-	while(FLASH_is_eeprom_ready()); // пусть будет 
+	eep.Save(EEP_OFFSET_ERR, &r, 4);
 }
-
-//static void SaveStateToEEP(void)
-//{
-	//eep.Save(EEP_OFFSET_STATE, &workData.AppState, 4+1);
-	////FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_STATE, (uint8_t*) &workData.AppState, 1+4);
-//}
 
 static void SaveChargeAndStateToEEP_Async(void)
 {
 	LastKadrEEPChargeUpdate = workData.time;	
-	eep.Save(EEP_OFFSET_KADR_CHARGE, &workData.AppState, sizeof(eep_save_state_and_charge_t));
-	//FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_KADR_CHARGE, (uint8_t*) &workData.AppState, sizeof(eep_save_state_and_charge_t));
+	eep.Save_Async(EEP_OFFSET_KADR_CHARGE, &workData.AppState, sizeof(eep_save_state_and_charge_t));
 }
 
 
@@ -284,8 +272,7 @@ static void RunCmd(void)
 		if (*(uint32_t*)(&Com.buf[DATA_POS]) == 0x12345678)
 		{
 			cli();			
-			FLASH_write_eeprom_byte(0, 0);
-			while(FLASH_is_eeprom_ready());			
+            eep.Save(0, (uint8_t*)"\0",1);
 			ccp_write_io((void *)&RSTCTRL.SWRR, 1);
 		}
 		break;
@@ -314,22 +301,17 @@ static void RunCmd(void)
 			}
 			else if (from == 8)// vat_vol 
 			{
-				FLASH_read_eeprom_block((eeprom_adr_t) EEP_OFFSET_VOLUME, dptr, n);
+				eep.Read(EEP_OFFSET_VOLUME, dptr, n);
 				Com.CRCSend(n+HEADER_LEN);
 			}
-			//else if (from == 16)// eep_save_state_t
-			//{
-				//FLASH_read_eeprom_block((eeprom_adr_t) EEP_OFFSET_STATE, dptr, n);
-				//Com.CRCSend(n+HEADER_LEN);
-			//}
 			else if (from == 16)// eep_errors_t
 			{
-				FLASH_read_eeprom_block((eeprom_adr_t) EEP_OFFSET_ERR, dptr, n);
+				eep.Read(EEP_OFFSET_ERR, dptr, n);
 				Com.CRCSend(n+HEADER_LEN);
 			}
 			else if (from == 512) // eep_save_state_t + charge_t
 			{
-				FLASH_read_eeprom_block((eeprom_adr_t) EEP_OFFSET_KADR_CHARGE, dptr, n);
+				eep.Read(EEP_OFFSET_KADR_CHARGE, dptr, n);
 				Com.CRCSend(n+HEADER_LEN);
 			}
 			else if (from == 1024) // daclevel (*(eep_nnk_dac_t*)0x8200) 
@@ -355,19 +337,19 @@ static void RunCmd(void)
 				{
 				//	ltc2942.ResetCharge();
 					float data = 0;					
-					FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_KADR_CHARGE + sizeof(save_state_t)
-					 + offsetof(charge_t,AccCharge) , (uint8_t*) &data, sizeof(float));					
+					eep.SaveBytes(EEP_OFFSET_KADR_CHARGE + sizeof(save_state_t)
+					 + offsetof(charge_t,AccCharge) ,&data, sizeof(float));					
 					b->ResetFlag = 0;
 					FLASH_write_flash_n(0, dptr, n+2);					
 				}
 			}
 			else if (from == 8) // vat_vol 
 			{
-				FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_VOLUME, dptr, n);
+				eep.SaveBytes(EEP_OFFSET_VOLUME, dptr, n);
 			}
 			else if (from == 512) // charge_t
 			{
-				FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_KADR_CHARGE, dptr, n);
+				eep.SaveBytes(EEP_OFFSET_KADR_CHARGE, dptr, n);
 			}
 			else if (from == 1024) // daclevel (*(eep_nnk_dac_t*)0x8200) 
 			{
@@ -423,27 +405,7 @@ static void RunCmd(void)
 
 int main(void)
 {
-	// старый подход
-/*	// Reset в ненормальном состоянии: время и кадры утеряны (лучше выключить прибор чтобы сохранить память)
-	if ((workData.AppState > APP_MAX)
-	||(workData.AppState == APP_SET_TIME)
-	||(workData.AppState == APP_CLEAR_RAM))
-	{
-		workData.AppState = APP_IDLE;
-		StandBy(false);
-		// подождем выключаться
-		TestModeTimer = 5;
-	}
-	// Reset в ненормальном состоянии вовремя работы считаем что кадры сохранились
-	else if (workData.AppState == APP_WORK)
-	{
-		WakeUp(); // выполняется сразу до sei()
-	}
-	// Reset в ненормальном состоянии вовремя работы считаем что кадры сохранились
-	// APP_DELAY
-	else StandBy(false);	*/
-	// новый подход
-
+// новый подход
 //	StandBy(true); ИТАК ПОУМОЛЧАНИЮ
 
 	ais328.norm_mode_2g_50hz();

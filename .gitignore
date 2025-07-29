@@ -36,12 +36,19 @@ VSC/
 tst*/
 .generated_files/
 build/
+_build/
+out/
+cmake/
 debug/
 dist/
 queuelogs/
 
 !h2meta.exe
+!cmake/*/*/user.cmake
 
 */*.log
 */*.inx
 */*.bin
+
+*.mc3
+*.yml

@@ -72,15 +72,16 @@ enum
 
 
 // стандартное начало пакета
-typedef  struct
+typedef  struct  __attribute__((packed))
 {
 	uint8_t AppState; ///  автомат|AU
 	int32_t time;    ///  время|WT
-} WorkDataStd_t __attribute__((aligned));
+} WorkDataStd_t;
 
 // CMD_ERAM чтение памяти прибора 
-typedef struct {
+typedef struct  __attribute__((packed)) 
+{
 	uint32_t addr;
 	uint32_t len;
-} ram_read_t  __attribute__((aligned));
+} ram_read_t;
 

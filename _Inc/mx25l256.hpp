@@ -289,6 +289,8 @@ public:
 		{
 			while (address < 0x02000000)
 			{
+                read((uint8_t*)&address, (uint8_t*)&x, 4);
+                
 				if (x == 0xFFFFFFFF) break;
 				*lastKadr += 1;
 				address += len;

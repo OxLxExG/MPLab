@@ -1,0 +1,8 @@
+{
+    "makefile.makefilePath": "D:\\Projects\\AVR\\MPLabVSC\\BK.X\\Makefile",
+    "makefile.makePath": "C:\\Program Files\\CMake\\bin\\cmake.exe ",
+    "mplab.clangd.arguments": [
+        "--compile-commands-dir=${workspaceRoot}\\_build\\bkvsc\\default"
+    ],
+    "mplab.clangd.path": ""
+}
