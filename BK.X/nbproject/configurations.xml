@@ -103,7 +103,7 @@
         <property key="pack-struct" value="true"/>
         <property key="preprocess-only" value="false"/>
         <property key="preprocessor-macros"
-                  value="F_CPU=8000000UL;ADDRESS_PROCESSOR=6;CLOCK=CLKHT,TA0,CLKNOOUT;POWER=PD,3;BK128=UART2;USEUSART1=DEF0,255,TB1;USEUSART2=DEF0,255,TB2;MT29F4G=SP1,ALT1,UART1,PD,4;AIS2IH=SP0,DEF0,PA,7;DEBUG"/>
+                  value="F_CPU=8000000UL;ADDRESS_PROCESSOR=6;CLOCK=CLKHT,TA0,CLKNOOUT;POWER=PD,3;BK128=UART2;USEUSART1=DEF0,255,TB1;USEUSART2=DEF0,255,TB2;MT29F4G=SP1,ALT1,UART1,PD,4;AIS2IH=SP0,DEF0,PA,7;DEBUG;TURBO=UART1,NOINDIC"/>
         <property key="preprocessor-macros-undefined" value=""/>
         <property key="save-temps" value="false"/>
         <property key="short-calls" value="false"/>

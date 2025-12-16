@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>com.microchip.mplab.nbide.embedded.makeproject</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/make-project/1">
+            <name>BootAVR128</name>
+            <name>BootTiny1616</name>
+            <creation-uuid>30e4ce12-b6d1-4ab8-b238-06c9944eb551</creation-uuid>
+            <make-project-type>0</make-project-type>
+            <sourceEncoding>windows-1251</sourceEncoding>
+            <make-dep-projects/>
+            <sourceRootList>
+                <sourceRootElem>.</sourceRootElem>
+                <sourceRootElem>../_Lib</sourceRootElem>
+            </sourceRootList>
+            <confList>
+                <confElem>
+                    <name>COM1_DEF0</name>
+                    <type>2</type>
+                </confElem>
+                <confElem>
+                    <name>Copy_of_default</name>
+                    <type>2</type>
+                </confElem>
+            </confList>
+            <formatting>
+                <project-formatting-style>false</project-formatting-style>
+            </formatting>
+        </data>
+    </configuration>
+</project>

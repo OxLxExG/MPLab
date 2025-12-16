@@ -38,6 +38,8 @@
 #include <twi_im.hpp>
 #include <LTC2942_im.hpp>
 
+#include <turbo.hpp>
+
 using namespace ngk128;
 
 INLN void resetPORTs(void)
@@ -75,12 +77,11 @@ static pinout_t<PWR> power;
 static pinout_t<BATON> batOn;
 static ngk_t<NGK> ngk;
 static ais328_t<AIS328SOFT> ais328;
-
-static uint8_t TurboTimer, TestModeTimer;
-static uint8_t curTurbo;
+static uint8_t TestModeTimer;
 static WorkData_t workData={APP_IDLE,DEFAULT_KADR};
 static volatile uint8_t ResetFunction NO_INIT;
 static int32_t LastKadrEEPChargeUpdate;
+static turbo_t<DEF_SPEED> Turbo;
 
 // реальные они-же виртуальные секции ROM
 #define newbat (*(eep_new_bat_t*)0x8000) // from 0
@@ -119,15 +120,11 @@ static void ResetErrorsInEEP(void)
 {
 	eep_errors_t e = {0,0,0,DEFAULT_KADR,DEFAULT_KADR};
 	eep.Save(EEP_OFFSET_ERR, &e, sizeof(eep_errors_t));
-//    FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_ERR, (uint8_t*) &e, sizeof(eep_errors_t));							
-//	while(FLASH_is_eeprom_ready()); 
 }
 // СОБЫТИЕ: ошибка кварца
 static void SaveQzErrInEEP(void)
 {
 	eep.Save(EEP_OFFSET_ERR_QZ, &workData.time, 4);
-//	FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_ERR_QZ, (uint8_t*) &workData.time, 4);
-	///while(FLASH_is_eeprom_ready());
 }
 
 // СОБЫТИЕ: аномальный ресет
@@ -139,15 +136,12 @@ static void SaveResetInEEP(int32_t* restored_kadr)
 	r.kadr_Reset = *restored_kadr;
 	r.ResetRegister = RSTCTRL.RSTFR;
 	eep.Save(EEP_OFFSET_ERR, &r, 4);
-//	FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_ERR , (uint8_t*) &r, sizeof(r));
-//	while(FLASH_is_eeprom_ready()); // пусть будет 
 }
 
 static void SaveChargeAndStateToEEP_Async(void)
 {
 	LastKadrEEPChargeUpdate = workData.time;	
 	eep.Save_Async(EEP_OFFSET_KADR_CHARGE, &workData.AppState, sizeof(eep_save_state_and_charge_t));
-	//FLASH_write_eeprom_block((eeprom_adr_t) EEP_OFFSET_KADR_CHARGE, (uint8_t*) &workData.AppState, sizeof(eep_save_state_and_charge_t));
 }
 
 static void UpdateFromEEP(void)
@@ -160,18 +154,6 @@ static void UpdateWorkData(void)
 	ais328.get_data(&workData.accel);
 	ngk.get(&workData.nnk.nk1);
 }
-static void RestoreTurbo(void)
-{
-	if(curTurbo >= 3)
-	{
-		Clock.RestoreExternalClock();
-		Clock.HiSpeedReady = false;
-	}
-	curTurbo = 0;
-	Indicator.User = false;
-	TurboTimer = 0;
-}
-
 static void RunCmd(void)
 {
 	switch (Com.buf[CMD_POS])
@@ -218,45 +200,7 @@ static void RunCmd(void)
 		}
 		break;
 		case CMD_TURBO:
-		{
-			uint8_t turbo = Com.buf[DATA_POS];
-			
-			if (turbo)
-			{
-				curTurbo = turbo;
-				TurboTimer =  4;
-				if (turbo >= 3)
-				{
-					Clock.MAXInternalClock();
-					Clock.HiSpeedReady = true;
-				}
-				Indicator.User = true;
-				Indicator.Off();
-			}
-			else RestoreTurbo();
-			
-			switch (turbo)
-			{
-				case 1:
-				Com.setBaud(500);
-				break;
-				case 2:
-				Com.setBaud(1000);
-				break;
-				case 3:
-				Com.setBaudMaxClock(1500);
-				break;
-				case 4:
-				Com.setBaudMaxClock(2000);
-				break;
-				case 6:
-				Com.setBaudMaxClock(3000);
-				break;
-				default:
-				Com.setBaud(DEF_SPEED);
-				break;
-			}
-		}
+            Turbo.Set(Com.buf[DATA_POS]);
 		break;
 		case CMD_BOOT:
 		if (*(uint32_t*)(&Com.buf[DATA_POS]) == 0x12345678)
@@ -267,16 +211,16 @@ static void RunCmd(void)
 		}
 		break;
 		case CMD_ERAM:
-		Ram.readAndSendUart(&Com.buf[DATA_POS]);
+            Ram.readAndSendUart(&Com.buf[DATA_POS]);
 		break;
-		case CMD_ERAM_WRITE:
-		Com.buf[DATA_POS] = Ram.write(&Com.buf[DATA_POS+1], Com.buf[DATA_POS]);
-		Com.CRCSend(HEADER_LEN+1);
-		break;
-		case CMD_ERAM_SET_BASE:
-		Ram.SetWritePage(&Com.buf[DATA_POS]);
-		Com.CRCSend(HEADER_LEN);
-		break;
+//		case CMD_ERAM_WRITE:
+//		Com.buf[DATA_POS] = Ram.write(&Com.buf[DATA_POS+1], Com.buf[DATA_POS]);
+//		Com.CRCSend(HEADER_LEN+1);
+//		break;
+//		case CMD_ERAM_SET_BASE:
+//		Ram.SetWritePage(&Com.buf[DATA_POS]);
+//		Com.CRCSend(HEADER_LEN);
+//		break;
 
 		case CMD_READ_EE:
 		{
@@ -378,14 +322,6 @@ static void RunCmd(void)
 		case CMD_INFO:
 		Com.CRCSend(ReadMetaData(&Com.buf[DATA_POS], Com.buf[DATA_POS], (Com.Count == HEADER_LEN+1+2+2)? *(uint16_t*)(&Com.buf[DATA_POS+1]): 0)+HEADER_LEN);
 		break;
-		//case CMD_ERR:
-		//uint8_t NeedClearErr = Com.buf[DATA_POS];
-		//Com.buf[DATA_POS] = Error_Code;
-		//if (Error_Code) Com.CRCSend(HEADER_LEN+1 + Error_Handler(&Com.buf[DATA_POS+1]));
-		//else Com.CRCSend(HEADER_LEN+1);
-		//if (NeedClearErr == 0xA5) Error_Code = 0;
-		//break;
-		
 	}
 }
 
@@ -472,7 +408,7 @@ int main(void)
 		///           70ms ticks
 		if ( Clock.checkReadyTik())
 		{
-			eep.Handler();			
+			eep.Handler();	
 			
 			Indicator.Handler64(workData.AppState); 				
 			
@@ -501,10 +437,7 @@ int main(void)
 			}
 			else Com.errRS485DirReset();
 			
-			if (TurboTimer > 0)
-			{
-				if(--TurboTimer == 0) RestoreTurbo();
-			}
+            Turbo.Handler2sec();
 
 			workData.time++;
 			
@@ -576,7 +509,8 @@ int main(void)
 			uint8_t tmp = Com.buf[0] & 0xF0;
 			if ((Com.Count > 2) && ((tmp == ADDRESS) || (tmp == 0xF0)) && (crc16(Com.buf, Com.Count) == 0))
 			{
-				if (TurboTimer > 0) TurboTimer = 4;
+                Turbo.RestartTimer();
+                
 				ResetFunction = 5;												
 				RunCmd();
 				ResetFunction = 50;

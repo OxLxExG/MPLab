@@ -47,7 +47,7 @@ inline void FLASH_spm_write_word(uint32_t address, uint16_t word)
 	); 
 }
 
-inline nvmctrl_status_t FLASH_write_flash_n(uint16_t from,  uint8_t *data, uint8_t n, bool erase=true)
+inline nvmctrl_status_t FLASH_write_flash_n(uint16_t from,  uint8_t *data, uint16_t n, bool erase=true)
 {
 	uint16_t *word_buffer = (uint16_t *)data;
 

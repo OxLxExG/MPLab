@@ -1,0 +1,226 @@
+#
+# Generated Makefile - do not edit!
+#
+# Edit the Makefile in the project folder instead (../Makefile). Each target
+# has a -pre and a -post target defined where you can add customized code.
+#
+# This makefile implements configuration specific macros and targets.
+
+
+# Include project Makefile
+ifeq "${IGNORE_LOCAL}" "TRUE"
+# do not include local makefile. User is passing all local related variables already
+else
+include Makefile
+# Include makefile containing local settings
+ifeq "$(wildcard nbproject/Makefile-local-default.mk)" "nbproject/Makefile-local-default.mk"
+include nbproject/Makefile-local-default.mk
+endif
+endif
+
+# Environment
+MKDIR=gnumkdir -p
+RM=rm -f 
+MV=mv 
+CP=cp 
+
+# Macros
+CND_CONF=default
+ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+IMAGE_TYPE=debug
+OUTPUT_SUFFIX=elf
+DEBUGGABLE_SUFFIX=elf
+FINAL_IMAGE=${DISTDIR}/ggkp1616.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+else
+IMAGE_TYPE=production
+OUTPUT_SUFFIX=hex
+DEBUGGABLE_SUFFIX=elf
+FINAL_IMAGE=${DISTDIR}/ggkp1616.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+endif
+
+ifeq ($(COMPARE_BUILD), true)
+COMPARISON_BUILD=
+else
+COMPARISON_BUILD=
+endif
+
+# Object Directory
+OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
+
+# Distribution Directory
+DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
+
+# Source Files Quoted if spaced
+SOURCEFILES_QUOTED_IF_SPACED=../_Lib/crc.S ../_Lib/protected_io.S main.cpp
+
+# Object Files Quoted if spaced
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/761250667/crc.o ${OBJECTDIR}/_ext/761250667/protected_io.o ${OBJECTDIR}/main.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/761250667/crc.o.d ${OBJECTDIR}/_ext/761250667/protected_io.o.d ${OBJECTDIR}/main.o.d
+
+# Object Files
+OBJECTFILES=${OBJECTDIR}/_ext/761250667/crc.o ${OBJECTDIR}/_ext/761250667/protected_io.o ${OBJECTDIR}/main.o
+
+# Source Files
+SOURCEFILES=../_Lib/crc.S ../_Lib/protected_io.S main.cpp
+
+# Pack Options 
+PACK_COMPILER_OPTIONS=-I "${DFP_DIR}/include"
+PACK_COMMON_OPTIONS=-B "${DFP_DIR}/gcc/dev/attiny1616"
+
+
+
+CFLAGS=
+ASFLAGS=
+LDLIBSOPTIONS=
+
+############# Tool locations ##########################################
+# If you copy a project from one host to another, the path where the  #
+# compiler is installed may be different.                             #
+# If you open this project with MPLAB X in the new host, this         #
+# makefile will be regenerated and the paths will be corrected.       #
+#######################################################################
+# fixDeps replaces a bunch of sed/cat/printf statements that slow down the build
+FIXDEPS=fixDeps
+
+# The following macros may be used in the pre and post step lines
+_/_=\\
+ShExtension=.bat
+Device=ATtiny1616
+ProjectDir="D:\Projects\Mplab\ggkp1616.X"
+ProjectName=ggkp1616
+ConfName=default
+ImagePath="dist\default\${IMAGE_TYPE}\ggkp1616.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}"
+ImageDir="dist\default\${IMAGE_TYPE}"
+ImageName="ggkp1616.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}"
+ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+IsDebug="true"
+else
+IsDebug="false"
+endif
+MDFUHostPath="D:\IDEs\MPLab\mplab_platform\mplab-pymdfu\bin\windows\pymdfu-bin.exe"
+PYFWImageBuilderPath="D:\IDEs\MPLab\mplab_platform\mplab-pymdfu\bin\windows\pyfwimagebuilder-bin.exe"
+
+.build-conf:  .pre ${BUILD_SUBPROJECTS}
+ifneq ($(INFORMATION_MESSAGE), )
+	@echo $(INFORMATION_MESSAGE)
+endif
+	${MAKE}  -f nbproject/Makefile-default.mk ${DISTDIR}/ggkp1616.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+	@echo "--------------------------------------"
+	@echo "User defined post-build step: [..\e.bat ${ProjectName} ${ProjectDir} ${ImagePath}]"
+	@..\e.bat ${ProjectName} ${ProjectDir} ${ImagePath}
+	@echo "--------------------------------------"
+
+MP_PROCESSOR_OPTION=ATtiny1616
+# ------------------------------------------------------------------------------------
+# Rules for buildStep: assemble
+ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+else
+endif
+
+# ------------------------------------------------------------------------------------
+# Rules for buildStep: assembleWithPreprocess
+ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+${OBJECTDIR}/_ext/761250667/crc.o: ../_Lib/crc.S  .generated_files/flags/default/40df2d40fc8c2770de4532cdb78e17f9db765207 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
+	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o.d 
+	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o 
+	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o.ok ${OBJECTDIR}/_ext/761250667/crc.o.err 
+	 ${MP_CPPC} $(MP_EXTRA_AS_PRE) -mmcu=attiny1616 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -DDEBUG  -x assembler-with-cpp -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -I"_I" -MD -MP -MF "${OBJECTDIR}/_ext/761250667/crc.o.d" -MT "${OBJECTDIR}/_ext/761250667/crc.o.d" -MT ${OBJECTDIR}/_ext/761250667/crc.o -o ${OBJECTDIR}/_ext/761250667/crc.o ../_Lib/crc.S  -DXPRJ_default=$(CND_CONF)  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/761250667/crc.o.asm.d",--defsym=__ICD2RAM=1,--defsym=__MPLAB_DEBUG=1,--gdwarf-2,--defsym=__DEBUG=1
+	
+${OBJECTDIR}/_ext/761250667/protected_io.o: ../_Lib/protected_io.S  .generated_files/flags/default/86a83c6db7a89fba5f98bc3c93bc7efe290e0c0b .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
+	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o.d 
+	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o 
+	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o.ok ${OBJECTDIR}/_ext/761250667/protected_io.o.err 
+	 ${MP_CPPC} $(MP_EXTRA_AS_PRE) -mmcu=attiny1616 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -DDEBUG  -x assembler-with-cpp -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -I"_I" -MD -MP -MF "${OBJECTDIR}/_ext/761250667/protected_io.o.d" -MT "${OBJECTDIR}/_ext/761250667/protected_io.o.d" -MT ${OBJECTDIR}/_ext/761250667/protected_io.o -o ${OBJECTDIR}/_ext/761250667/protected_io.o ../_Lib/protected_io.S  -DXPRJ_default=$(CND_CONF)  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/761250667/protected_io.o.asm.d",--defsym=__ICD2RAM=1,--defsym=__MPLAB_DEBUG=1,--gdwarf-2,--defsym=__DEBUG=1
+	
+else
+${OBJECTDIR}/_ext/761250667/crc.o: ../_Lib/crc.S  .generated_files/flags/default/c1e26e966e3adf56c61787f9e4b68313ef77b73c .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
+	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o.d 
+	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o 
+	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o.ok ${OBJECTDIR}/_ext/761250667/crc.o.err 
+	 ${MP_CPPC} $(MP_EXTRA_AS_PRE) -mmcu=attiny1616 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -x assembler-with-cpp -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -I"_I" -MD -MP -MF "${OBJECTDIR}/_ext/761250667/crc.o.d" -MT "${OBJECTDIR}/_ext/761250667/crc.o.d" -MT ${OBJECTDIR}/_ext/761250667/crc.o -o ${OBJECTDIR}/_ext/761250667/crc.o ../_Lib/crc.S  -DXPRJ_default=$(CND_CONF)  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/761250667/crc.o.asm.d"
+	
+${OBJECTDIR}/_ext/761250667/protected_io.o: ../_Lib/protected_io.S  .generated_files/flags/default/f124fe51aad3fd394319466c4305159495d15cb0 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
+	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o.d 
+	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o 
+	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o.ok ${OBJECTDIR}/_ext/761250667/protected_io.o.err 
+	 ${MP_CPPC} $(MP_EXTRA_AS_PRE) -mmcu=attiny1616 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -x assembler-with-cpp -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -I"_I" -MD -MP -MF "${OBJECTDIR}/_ext/761250667/protected_io.o.d" -MT "${OBJECTDIR}/_ext/761250667/protected_io.o.d" -MT ${OBJECTDIR}/_ext/761250667/protected_io.o -o ${OBJECTDIR}/_ext/761250667/protected_io.o ../_Lib/protected_io.S  -DXPRJ_default=$(CND_CONF)  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/761250667/protected_io.o.asm.d"
+	
+endif
+
+# ------------------------------------------------------------------------------------
+# Rules for buildStep: compile
+ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+else
+endif
+
+# ------------------------------------------------------------------------------------
+# Rules for buildStep: compileCPP
+ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+${OBJECTDIR}/main.o: main.cpp  .generated_files/flags/default/cd60d5cd25ade63f329fb97727b9e9d2caeba646 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/main.o.d 
+	@${RM} ${OBJECTDIR}/main.o 
+	 ${MP_CPPC} $(MP_EXTRA_CC_PRE) -mmcu=attiny1616 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS} -g -DDEBUG  -gdwarf-2  -x c++ -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -I"_I" -funsigned-char -funsigned-bitfields -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DF_CPU=10000000UL -DADDRESS_PROCESSOR=4 -Wall -MD -MP -MF "${OBJECTDIR}/main.o.d" -MT "${OBJECTDIR}/main.o.d" -MT ${OBJECTDIR}/main.o  -o ${OBJECTDIR}/main.o main.cpp  -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -fno-strict-aliasing
+	
+else
+${OBJECTDIR}/main.o: main.cpp  .generated_files/flags/default/e915533c12b68111fecb8b763b592fe35add44de .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/main.o.d 
+	@${RM} ${OBJECTDIR}/main.o 
+	 ${MP_CPPC} $(MP_EXTRA_CC_PRE) -mmcu=attiny1616 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -x c++ -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -I"_I" -funsigned-char -funsigned-bitfields -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DF_CPU=10000000UL -DADDRESS_PROCESSOR=4 -Wall -MD -MP -MF "${OBJECTDIR}/main.o.d" -MT "${OBJECTDIR}/main.o.d" -MT ${OBJECTDIR}/main.o  -o ${OBJECTDIR}/main.o main.cpp  -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -fno-strict-aliasing
+	
+endif
+
+# ------------------------------------------------------------------------------------
+# Rules for buildStep: link
+ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+${DISTDIR}/ggkp1616.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}: ${OBJECTFILES}  nbproject/Makefile-${CND_CONF}.mk    
+	@${MKDIR} ${DISTDIR} 
+	${MP_CPPC} $(MP_EXTRA_LD_PRE) -mmcu=attiny1616 ${PACK_COMMON_OPTIONS}   -gdwarf-2 -D__$(MP_PROCESSOR_OPTION)__  -Wl,-Map="${DISTDIR}\ggkp1616.X.${IMAGE_TYPE}.map"   -Xlinker -T ../avrxmega3.x  -Wl,-section-start=.text=0x400  -o ${DISTDIR}/ggkp1616.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX} ${OBJECTFILES_QUOTED_IF_SPACED}      -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -Wl,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_LD_POST)$(MP_LINKER_FILE_OPTION),--defsym=__ICD2RAM=1,--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1 -Wl,--gc-sections -Wl,--start-group  -Wl,-lm -Wl,--end-group 
+	
+	
+	${MP_CC_DIR}\\avr-objdump -h -S "${DISTDIR}/ggkp1616.X.${IMAGE_TYPE}.${DEBUGGABLE_SUFFIX}" > "${DISTDIR}/ggkp1616.X.${IMAGE_TYPE}.lss"
+	
+	
+	
+else
+${DISTDIR}/ggkp1616.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}: ${OBJECTFILES}  nbproject/Makefile-${CND_CONF}.mk   
+	@${MKDIR} ${DISTDIR} 
+	${MP_CPPC} $(MP_EXTRA_LD_PRE) -mmcu=attiny1616 ${PACK_COMMON_OPTIONS}  -D__$(MP_PROCESSOR_OPTION)__  -Wl,-Map="${DISTDIR}\ggkp1616.X.${IMAGE_TYPE}.map"   -Xlinker -T ../avrxmega3.x  -Wl,-section-start=.text=0x400  -o ${DISTDIR}/ggkp1616.X.${IMAGE_TYPE}.${DEBUGGABLE_SUFFIX} ${OBJECTFILES_QUOTED_IF_SPACED}      -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -Wl,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_LD_POST)$(MP_LINKER_FILE_OPTION) -Wl,--gc-sections -Wl,--start-group  -Wl,-lm -Wl,--end-group 
+	${MP_CC_DIR}\\avr-objcopy -O ihex "${DISTDIR}/ggkp1616.X.${IMAGE_TYPE}.${DEBUGGABLE_SUFFIX}" "${DISTDIR}/ggkp1616.X.${IMAGE_TYPE}.hex"
+	
+	${MP_CC_DIR}\\avr-objdump -h -S "${DISTDIR}/ggkp1616.X.${IMAGE_TYPE}.${DEBUGGABLE_SUFFIX}" > "${DISTDIR}/ggkp1616.X.${IMAGE_TYPE}.lss"
+	
+	
+	
+endif
+
+.pre:
+	@echo "--------------------------------------"
+	@echo "User defined pre-build step: [..\p.bat ${ProjectDir}]"
+	@..\p.bat ${ProjectDir}
+	@echo "--------------------------------------"
+
+# Subprojects
+.build-subprojects:
+
+
+# Subprojects
+.clean-subprojects:
+
+# Clean Targets
+.clean-conf: ${CLEAN_SUBPROJECTS}
+	${RM} -r ${OBJECTDIR}
+	${RM} -r ${DISTDIR}
+
+# Enable dependency checking
+.dep.inc: .depcheck-impl
+
+DEPFILES=$(wildcard ${POSSIBLE_DEPFILES})
+ifneq (${DEPFILES},)
+include ${DEPFILES}
+endif

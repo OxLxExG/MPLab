@@ -379,6 +379,16 @@ public:
 		return true;
 	}
 	
+    void setTimout(uint16_t ccmp)
+    {
+		TB.CCMP = ccmp;
+		TB.CNT = 0;
+    }
+    uint16_t getTimout(void)
+    {
+	  return TB.CCMP;
+    }
+    
 	bool setBaud(uint16_t fbaudDiv1000)
 	{
 		if(timerNo != SPI_MODE)
@@ -443,7 +453,7 @@ public:
 		setReadyRxD();
 	}
 	
-	INLN void startTxD(const uint8_t count)
+	INLN void startTxD(const buf_len_t count)
 	{
 		if(timerNo != SPI_MODE)
 		{		
@@ -494,12 +504,12 @@ public:
 		}
 	}
     
-	INLN void CRCSendPool(uint8_t n)
+	INLN void CRCSendPool(buf_len_t n)
     {
 	    disableRxD();		
 		enableTxD();
 	    *(uint16_t*)&buf[n] = CRC(buf, n);
-		for(buf_len_t i=0; i<n+2;i++) write(buf[i]);		
+		for(buf_len_t i=0; i<n+2;i++) wait_writeTxC(buf[i]);		
 		//waitTxC();
 		disableTxD();
 		enableRxD();		
@@ -529,16 +539,22 @@ public:
 		TB.CTRLA = 0;
 		Count = cnt;
 	}
+
+    INLN void Send(buf_len_t n)
+    {
+		disableRxD();
+	    startTxD(n);
+    }
 	
 	
-    INLN void CRCSend(uint8_t n)
+    INLN void CRCSend(buf_len_t n)
     {
 		disableRxD();
 		uint16_t* pn = (uint16_t*)(&buf[n]);		
 	    *pn = CRC(buf, n);
 	    startTxD(n+2);
     }
-    INLN void CRCSend(void* src, uint8_t n)
+    INLN void CRCSend(void* src, buf_len_t n)
     {
 		disableRxD();
 	    memcpy(&buf[DATA_POS], src, n);

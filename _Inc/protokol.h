@@ -1,6 +1,9 @@
 #pragma once
 
 
+#ifndef ADDRESS_PROCESSOR
+ #define ADDRESS_PROCESSOR 0
+#endif
 #ifdef BT2
 	//Для совместимости с BT1
 	#define ADDRESS 0
@@ -31,9 +34,10 @@
 #define CMD_ERAM 0x1 | ADDRESS
 // чтение информации об устройстве (дескриптор устройства)
 #define CMD_INFO 0x2 | ADDRESS
-
+#define CMD_READ_ANY  0x3 | ADDRESS
+#define CMD_WRITE_ANY 0x4 | ADDRESS
 // обработка ошибок
-#define CMD_ERR 0xE | ADDRESS // было 6 неверно конфликт с  CMD_WRITE_EE
+//#define CMD_ERR 0xE | ADDRESS // было 6 неверно конфликт с  CMD_WRITE_EE E- неверно конфликт с CMD_BOOT_EXIT
 
 // чтение EEPROM памяти
 #define CMD_READ_EE 0x5 | ADDRESS
@@ -43,14 +47,14 @@
 // текущие состоание и данные (Тестовый режим или выдача последниз сохраненных данных в рабочем режиме)
 #define CMD_WORK 0x7 | ADDRESS
 // bootloader
-#define CMD_BOOT 0x8 | ADDRESS
+ #define CMD_BOOT 0x8 | ADDRESS
 // фрматирование NAND
 #define CMD_ERAM_CLEAR 0x0A | ADDRESS
 // bootloader commands
-#define CMD_BOOT_TEST	0x8
-#define CMD_BOOT_READ   0xD 
-#define CMD_BOOT_EXIT	0xE 
-#define CMD_BOOT_WRITE  0xF 
+#define CMD_BOOT_TEST	0x8 | ADDRESS
+#define CMD_BOOT_READ   0xD | ADDRESS 
+#define CMD_BOOT_EXIT	0xE | ADDRESS 
+#define CMD_BOOT_WRITE  0xF | ADDRESS 
 
 // запись внешней памяти ТОЛЬКО В ТЕСТОВЫХ ЦЕЛЯХ
 #define CMD_ERAM_WRITE 0x9 | ADDRESS

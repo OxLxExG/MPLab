@@ -236,7 +236,7 @@ public:
 	INLN ram_t(void)
 	{
 		//CHIP SELECT
-	    SPI.CTRLB = 3;
+	    //SPI.CTRLB = 3;
 		PCS.DIRSET = 1 << bitCS;
 		CS_off();
 		

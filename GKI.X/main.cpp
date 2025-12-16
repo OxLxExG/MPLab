@@ -39,6 +39,7 @@
 #include <twi_im.hpp>
 #include <LTC2942_im.hpp>
 
+#include <turbo.hpp>
 
 using namespace adxl356gk_v2;
 
@@ -113,8 +114,12 @@ static ram_t<MX25L256> Ram;
 static gk_t<GK> Gk;
 static int32_t LastKadrEEPChargeUpdate;
 static volatile uint8_t ResetFunction NO_INIT;
-static uint8_t curTurbo;
 static WorkData_t workData={APP_IDLE,DEFAULT_KADR};
+static turbo_t<DEF_SPEED> Turbo;
+static uint8_t TestModeTimer, WdrADC;
+static uint8_t saveLen;
+static uint16_t saveGK;
+
 
 
 
@@ -136,9 +141,6 @@ void init3(void)
 	for (uint16_t i = 0x4000; i<0x8000; i++) *(uint8_t*) i = 0xAA;	
 }
 
-static uint8_t TurboTimer, TestModeTimer, WdrADC;
-static uint8_t saveLen;
-static uint16_t saveGK;
 
 static void trrt(sensorTrrT_t& t, TrrT_t& rt, Dat_m_t& nt, Dat_m_t& tr)
 {
@@ -276,10 +278,6 @@ static bool Powered(void)
 	return power.IsOn();
 }
 
-//static bool Powered()
-//{
-	//return ads131.IsOn;
-//}
 static void WakeUp(void)
 {
 	batOn.On();
@@ -422,18 +420,6 @@ static void ResetWdrADC(void)
 	WdrADC = 0;
 }
 
-static void RestoreTurbo(void)
-{
-	if(curTurbo >= 3)
-	{
-		Clock.RestoreExternalClock();
-		Clock.HiSpeedReady = false;
-	}
-	curTurbo = 0;
-	Indicator.User = false;
-	TurboTimer = 0;
-}
-
 static void RunCmd(void)
 {
 	switch (Com.buf[CMD_POS])
@@ -479,74 +465,14 @@ static void RunCmd(void)
 		}
 		break;
 		case CMD_TURBO:		
-		{
-			uint8_t turbo = Com.buf[DATA_POS];
-			
-			if (turbo)
-			{
-				curTurbo = turbo;
-				TurboTimer =  4;
-				if (turbo >= 3)
-				{
-					Clock.MAXInternalClock();
-					Clock.HiSpeedReady = true;
-				}
-				Indicator.User = true;
-				Indicator.Off();
-			}
-			else RestoreTurbo();
-			
-			switch (turbo)
-			{
-				case 1:
-				Com.setBaud(500);
-				break;
-				case 2:
-				Com.setBaud(1000);
-				break;
-				case 3:
-				Com.setBaudMaxClock(1500);
-				break;
-				case 4:
-				Com.setBaudMaxClock(2000);
-				break;
-				case 6:
-				Com.setBaudMaxClock(3000);
-				break;
-				default:
-				Com.setBaud(DEF_SPEED);
-				break;
-			}
-		}		
-			//switch (Com.buf[DATA_POS])
-			//{
-				//case 1:
-				    //curTurbo = 1;
-					//Com.setBaud(500);
-					//TurboTimer = 4;
-				//break;
-				//case 2:
-				    //curTurbo = 2;
-					//Com.setBaud(1000);
-					//TurboTimer = 4;
-				//break;
-				//default:
-				    //curTurbo = 0;
-					//Com.setBaud(125);
-					//TurboTimer = 0;
-				//break;
-			//}
+            Turbo.Set(Com.buf[DATA_POS]);
 		break;
 		case CMD_BOOT:
-			if (*(uint32_t*)(&Com.buf[DATA_POS]) == 0x12345678)
+    		if (*(uint32_t*)(&Com.buf[DATA_POS]) == 0x12345678)
 			{
-			cli();	
-            eep.Save(0, (uint8_t*)"\0",1);
-			ccp_write_io((void *)&RSTCTRL.SWRR, 1);                
-//				cli();
-//				FLASH_write_eeprom_byte(0, 0);
-//				while(FLASH_is_eeprom_ready());
-//                ccp_write_io((void *)&RSTCTRL.SWRR, 1);
+                cli();	
+                eep.Save(0, (uint8_t*)"\0",1);
+                ccp_write_io((void *)&RSTCTRL.SWRR, 1);                
 			}
 		break;
 		case CMD_ERAM:
@@ -693,19 +619,8 @@ static void RunCmd(void)
 	}
 }
 
-//ISR(BOD_VLM_vect)
-//{
-	//FLASH_write_eeprom_block((eeprom_adr_t)&eeprom, (uint8_t*) &workData.AppState, 5);
-//}
-
-
 int main(void)
 {
-	//PORTD.DIRSET = 1<< 1;
-	
-	//BOD.INTCTRL = 1 << BOD_VLMIE_bp        /* voltage level monitor interrrupt enable: enabled */
-	//| BOD_VLMCFG_FALLING_gc; /* Interrupt when supply goes below VLM level */
-	
 	// новый подход
 	if (eep_kadr_charge.kadr.AppState != APP_IDLE) // жопа
 	{		
@@ -757,8 +672,6 @@ int main(void)
 	
 	ltc2942c::twi.CallbackRegister(ltc2942c::I2CErr);
 	
-    //Indicator.User = true;
-    
 	sei();	
 	
 	UpdateFromEEP();
@@ -836,10 +749,8 @@ int main(void)
 			}
 			else Com.errRS485DirReset();
 			
-			if (TurboTimer > 0)
-			{
-				if(--TurboTimer == 0) RestoreTurbo();
-			}
+            Turbo.Handler2sec();
+            
 			workData.time++;				
 
 			ResetFunction = 3;
@@ -896,28 +807,20 @@ int main(void)
 				break;					
 				case APP_WORK:
 				    
-                    //Indicator.On();
-                    
 					ResetWdrADC();
 					
 				    ResetFunction = 4;
 					Ram.write((uint8_t*) &workData.time, sizeof(RamData_t));	
 				    ResetFunction = 40;
-                    
-                    //Indicator.Off();
 				break;
 			}
 		} // ~if (SysTick.Is2SecTick())
 		if (Com.checkReadyRxD())
 		{
-			#ifdef BT2
-			 if ((Com.Count > 3) && ((Com.buf[0] == ADDRESS_PROCESSOR) || (Com.buf[0] == 0xFF)) && (crc16(Com.buf, Com.Count) == 0))
-			#else
-			 uint8_t tmp = Com.buf[0] & 0xF0;
-			 if ((Com.Count > 2) && ((tmp == ADDRESS) || (tmp == 0xF0)) && (crc16(Com.buf, Com.Count) == 0))
-			#endif
+            uint8_t tmp = Com.buf[0] & 0xF0;
+			if ((Com.Count > 2) && ((tmp == ADDRESS) || (tmp == 0xF0)) && (crc16(Com.buf, Com.Count) == 0))
 			{
-				if (TurboTimer > 0) TurboTimer = 4;
+                Turbo.RestartTimer();
 				RunCmd();
 			}
 		} // ~Com.Pool())

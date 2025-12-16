@@ -9,6 +9,7 @@
             "imageType": "application",
             "imagePath": "./out/NGK/default.elf",
             "toolProperties": "default-tool",
+            "tool": "Simulator",
             "packs": [
                 {
                     "name": "AVR-Dx_DFP",
@@ -54,7 +55,8 @@
                     "PWR=PD,4",
                     "BATON=PD,7",
                     "DEBUG",
-                    "LTC2942=I2C0,ALT2"
+                    "LTC2942=I2C0,ALT2",
+                    "TURBO=UART2,INDIC"
                 ],
                 "compiler++.extra-include-directories": [
                     "."

@@ -39,6 +39,9 @@
 #include <twi_im.hpp>
 #include <LTC2942_im.hpp>
 
+#include <turbo.hpp>
+
+
 using namespace nnk128;
 
 INLN void resetPORTs(void)
@@ -78,11 +81,11 @@ static pinout_t<BATON> batOn;
 static nnk_t<NNK> nnk;
 static ais328_t<AIS328SOFT> ais328;
 //static ltc2942_t ltc2942;
-static uint8_t TurboTimer, TestModeTimer;
-static uint8_t curTurbo;
+static uint8_t TestModeTimer;
 static WorkData_t workData={APP_IDLE,DEFAULT_KADR};
 static volatile uint8_t ResetFunction NO_INIT;
 static int32_t LastKadrEEPChargeUpdate;
+static turbo_t<DEF_SPEED> Turbo;
 
 // реальные они-же виртуальные секции ROM
 #define newbat (*(eep_new_bat_t*)0x8000) // from 0
@@ -170,18 +173,6 @@ static void UpdateWorkData(void)
 	ais328.get_data(&workData.accel);
 	nnk.get(&workData.nnk.nk1);
 }
-static void RestoreTurbo(void)
-{
-	if(curTurbo >= 3)
-	{
-		Clock.RestoreExternalClock();
-		Clock.HiSpeedReady = false;
-	}
-	curTurbo = 0;
-	Indicator.User = false;
-	TurboTimer = 0;	
-}
-
 static void RunCmd(void)
 {
 	switch (Com.buf[CMD_POS])
@@ -228,45 +219,7 @@ static void RunCmd(void)
 		}
 		break;
 		case CMD_TURBO:
-		{		
-			uint8_t turbo = Com.buf[DATA_POS];
-			
-			if (turbo)
-			{
-				curTurbo = turbo;
-				TurboTimer =  4;
-				if (turbo >= 3)
-				{
-					Clock.MAXInternalClock();
-					Clock.HiSpeedReady = true;
-				}
-				Indicator.User = true;
-				Indicator.Off();
-			}
-			else RestoreTurbo();
-			
-			switch (turbo)
-			{
-				case 1:
-					Com.setBaud(500);
-				break;
-				case 2:
-					Com.setBaud(1000);
-				break;
-				case 3:
-					Com.setBaudMaxClock(1500);
-				break;
-				case 4:
-					Com.setBaudMaxClock(2000);
-				break;
-				case 6:
-					Com.setBaudMaxClock(3000);
-				break;
-				default:
-					Com.setBaud(DEF_SPEED);
-				break;
-			}
-		}
+			Turbo.Set(Com.buf[DATA_POS]);			
 		break;
 		case CMD_BOOT:
 		if (*(uint32_t*)(&Com.buf[DATA_POS]) == 0x12345678)
@@ -520,10 +473,7 @@ int main(void)
 			}
 			else Com.errRS485DirReset();
 			
-			if (TurboTimer > 0) 
-			{
-				if(--TurboTimer == 0) RestoreTurbo();
-			}
+            Turbo.Handler2sec();
 
 			workData.time++;
 			
@@ -595,7 +545,8 @@ int main(void)
 			uint8_t tmp = Com.buf[0] & 0xF0;
 			if ((Com.Count > 2) && ((tmp == ADDRESS) || (tmp == 0xF0)) && (crc16(Com.buf, Com.Count) == 0))
 			{
-				if (TurboTimer > 0) TurboTimer = 4;
+                Turbo.RestartTimer();
+				
 				ResetFunction = 5;												
 				RunCmd();
 				ResetFunction = 50;

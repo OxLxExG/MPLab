@@ -61,9 +61,18 @@
 #define TRTC 2
 #define TNOT 3
 
+#define NOINDIC 0
+#define INDIC   1
+
 
 #define INLN __attribute__ ((__always_inline__)) inline
 #define NO_INIT __attribute__ ((section(".noinit")))
+
+typedef union
+{
+	uint8_t B[2];
+	int16_t u16;
+} unio16_t;
 
 typedef union
 {

@@ -34,6 +34,8 @@
 #include <nand.hpp>
 #include <bk.hpp>
 
+#include <turbo.hpp>
+
 
 using namespace bk128;
 
@@ -77,11 +79,12 @@ ram_t<MT29F4G> Ram;
 static pinout_t<POWER> power;
 static ais2ih_t<AIS2IH> Ais2ih;
 static bk_t bk;
-static uint8_t TurboTimer, TestModeTimer;
-static uint8_t curTurbo;
+static uint8_t TestModeTimer;
 static WorkData_t workData={APP_IDLE,DEFAULT_KADR};
 static volatile uint8_t ResetFunction NO_INIT;
 static int32_t LastKadrEEPChargeUpdate;
+static turbo_t<DEF_SPEED> Turbo;
+
 
 // виртуальные секции EEPROM
 #define EEP_OFFSET_ERR          16 // from 16
@@ -193,18 +196,6 @@ static void cbNANDErr(nand_errors_t e)
    SaveNANDErrInEEP(e); 
 }
 
-static void RestoreTurbo(void)
-{
-	if(curTurbo >= 3)
-	{
-		Clock.RestoreExternalClock();
-		Clock.HiSpeedReady = false;
-	}
-	curTurbo = 0;
-//	Indicator.User = false;
-	TurboTimer = 0;	
-}
-
 static void bk_callback(void* buf, uint8_t size)
 {
 	if (size > 0) 
@@ -274,43 +265,7 @@ static void RunCmd(void)
 		}
 		break;
 		case CMD_TURBO:
-		{		
-			uint8_t turbo = Com.buf[DATA_POS];
-			
-			if (turbo)
-			{
-				curTurbo = turbo;
-				TurboTimer =  4;
-				if (turbo >= 3)
-				{
-					Clock.MAXInternalClock();
-					Clock.HiSpeedReady = true;
-				}
-			}
-			else RestoreTurbo();
-			
-			switch (turbo)
-			{
-				case 1:
-					Com.setBaud(500);
-				break;
-				case 2:
-					Com.setBaud(1000);
-				break;
-				case 3:
-					Com.setBaudMaxClock(1500);
-				break;
-				case 4:
-					Com.setBaudMaxClock(2000);
-				break;
-				case 6:
-					Com.setBaudMaxClock(3000);
-				break;
-				default:
-					Com.setBaud(DEF_SPEED);
-				break;
-			}
-		}
+            Turbo.Set(Com.buf[DATA_POS]);
 		break;
 		case CMD_BOOT:
 		if (*(uint32_t*)(&Com.buf[DATA_POS]) == 0x12345678)
@@ -455,7 +410,7 @@ int main(void)
     if (!Ais2ih.InitAccel()) SaveDevErrInEEP(ERR_PERIPH_AIS2IH); 	
 
 	// включаем сторожевой таймер
-    if (workData.AppState == APP_WORK || workData.AppState == APP_IDLE) wdt_enable(WDTO_N); 
+    if (workData.AppState == APP_WORK || workData.AppState == APP_DELAY) wdt_enable(WDTO_N); 
 	// включаем питание
 	if (workData.AppState == APP_WORK) WakeUp();
 		
@@ -515,11 +470,8 @@ int main(void)
 			else Com.errRS485DirReset();
 
 			ResetFunction = 3;
-			
-			if (TurboTimer > 0) 
-			{
-				if(--TurboTimer == 0) RestoreTurbo();
-			}
+
+			Turbo.Handler2sec();
 
 			workData.time++;
 						
@@ -582,7 +534,7 @@ int main(void)
 			uint8_t tmp = Com.buf[0] & 0xF0;
 			if ((Com.Count > 2) && ((tmp == ADDRESS) || (tmp == 0xF0)) && (crc16(Com.buf, Com.Count) == 0))
 			{
-				if (TurboTimer > 0) TurboTimer = 4;
+                Turbo.RestartTimer();
 				ResetFunction = 11;												
 				RunCmd();
 				ResetFunction = 12;

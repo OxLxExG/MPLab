@@ -1,0 +1,211 @@
+#
+# Generated Makefile - do not edit!
+#
+# Edit the Makefile in the project folder instead (../Makefile). Each target
+# has a -pre and a -post target defined where you can add customized code.
+#
+# This makefile implements configuration specific macros and targets.
+
+
+# Include project Makefile
+ifeq "${IGNORE_LOCAL}" "TRUE"
+# do not include local makefile. User is passing all local related variables already
+else
+include Makefile
+# Include makefile containing local settings
+ifeq "$(wildcard nbproject/Makefile-local-COM1_DEF0.mk)" "nbproject/Makefile-local-COM1_DEF0.mk"
+include nbproject/Makefile-local-COM1_DEF0.mk
+endif
+endif
+
+# Environment
+MKDIR=gnumkdir -p
+RM=rm -f 
+MV=mv 
+CP=cp 
+
+# Macros
+CND_CONF=COM1_DEF0
+ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+IMAGE_TYPE=debug
+OUTPUT_SUFFIX=elf
+DEBUGGABLE_SUFFIX=elf
+FINAL_IMAGE=${DISTDIR}/BootAVR128.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+else
+IMAGE_TYPE=production
+OUTPUT_SUFFIX=hex
+DEBUGGABLE_SUFFIX=elf
+FINAL_IMAGE=${DISTDIR}/BootAVR128.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+endif
+
+ifeq ($(COMPARE_BUILD), true)
+COMPARISON_BUILD=
+else
+COMPARISON_BUILD=
+endif
+
+# Object Directory
+OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
+
+# Distribution Directory
+DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
+
+# Source Files Quoted if spaced
+SOURCEFILES_QUOTED_IF_SPACED=main.cpp ../_Lib/crc.S ../_Lib/usarts.cpp ../_Lib/protected_io.S
+
+# Object Files Quoted if spaced
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/main.o ${OBJECTDIR}/_ext/761250667/crc.o ${OBJECTDIR}/_ext/761250667/usarts.o ${OBJECTDIR}/_ext/761250667/protected_io.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/main.o.d ${OBJECTDIR}/_ext/761250667/crc.o.d ${OBJECTDIR}/_ext/761250667/usarts.o.d ${OBJECTDIR}/_ext/761250667/protected_io.o.d
+
+# Object Files
+OBJECTFILES=${OBJECTDIR}/main.o ${OBJECTDIR}/_ext/761250667/crc.o ${OBJECTDIR}/_ext/761250667/usarts.o ${OBJECTDIR}/_ext/761250667/protected_io.o
+
+# Source Files
+SOURCEFILES=main.cpp ../_Lib/crc.S ../_Lib/usarts.cpp ../_Lib/protected_io.S
+
+# Pack Options 
+PACK_COMPILER_OPTIONS=-I "${DFP_DIR}/include"
+PACK_COMMON_OPTIONS=-B "${DFP_DIR}/gcc/dev/avr128db48"
+
+
+
+CFLAGS=
+ASFLAGS=
+LDLIBSOPTIONS=
+
+############# Tool locations ##########################################
+# If you copy a project from one host to another, the path where the  #
+# compiler is installed may be different.                             #
+# If you open this project with MPLAB X in the new host, this         #
+# makefile will be regenerated and the paths will be corrected.       #
+#######################################################################
+# fixDeps replaces a bunch of sed/cat/printf statements that slow down the build
+FIXDEPS=fixDeps
+
+.build-conf:  ${BUILD_SUBPROJECTS}
+ifneq ($(INFORMATION_MESSAGE), )
+	@echo $(INFORMATION_MESSAGE)
+endif
+	${MAKE}  -f nbproject/Makefile-COM1_DEF0.mk ${DISTDIR}/BootAVR128.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+
+MP_PROCESSOR_OPTION=AVR128DB48
+# ------------------------------------------------------------------------------------
+# Rules for buildStep: assemble
+ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+else
+endif
+
+# ------------------------------------------------------------------------------------
+# Rules for buildStep: assembleWithPreprocess
+ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+${OBJECTDIR}/_ext/761250667/crc.o: ../_Lib/crc.S  .generated_files/flags/COM1_DEF0/5cae5e1188c03937c22620c2651b31c773a2cafa .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
+	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o.d 
+	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o 
+	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o.ok ${OBJECTDIR}/_ext/761250667/crc.o.err 
+	 ${MP_CPPC} $(MP_EXTRA_AS_PRE) -mmcu=avr128db48 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -DDEBUG  -x assembler-with-cpp -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -MD -MP -MF "${OBJECTDIR}/_ext/761250667/crc.o.d" -MT "${OBJECTDIR}/_ext/761250667/crc.o.d" -MT ${OBJECTDIR}/_ext/761250667/crc.o -o ${OBJECTDIR}/_ext/761250667/crc.o ../_Lib/crc.S  -DXPRJ_COM1_DEF0=$(CND_CONF)  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/761250667/crc.o.asm.d",--defsym=__ICD2RAM=1,--defsym=__MPLAB_DEBUG=1,--gdwarf-2,--defsym=__DEBUG=1
+	
+${OBJECTDIR}/_ext/761250667/protected_io.o: ../_Lib/protected_io.S  .generated_files/flags/COM1_DEF0/1f4ccb0623971940c6d8e9090aeb06657c0ebacc .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
+	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o.d 
+	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o 
+	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o.ok ${OBJECTDIR}/_ext/761250667/protected_io.o.err 
+	 ${MP_CPPC} $(MP_EXTRA_AS_PRE) -mmcu=avr128db48 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -DDEBUG  -x assembler-with-cpp -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -MD -MP -MF "${OBJECTDIR}/_ext/761250667/protected_io.o.d" -MT "${OBJECTDIR}/_ext/761250667/protected_io.o.d" -MT ${OBJECTDIR}/_ext/761250667/protected_io.o -o ${OBJECTDIR}/_ext/761250667/protected_io.o ../_Lib/protected_io.S  -DXPRJ_COM1_DEF0=$(CND_CONF)  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/761250667/protected_io.o.asm.d",--defsym=__ICD2RAM=1,--defsym=__MPLAB_DEBUG=1,--gdwarf-2,--defsym=__DEBUG=1
+	
+else
+${OBJECTDIR}/_ext/761250667/crc.o: ../_Lib/crc.S  .generated_files/flags/COM1_DEF0/e143efd1fbff5d0ea8289f476f3485e891fc43d1 .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
+	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o.d 
+	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o 
+	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o.ok ${OBJECTDIR}/_ext/761250667/crc.o.err 
+	 ${MP_CPPC} $(MP_EXTRA_AS_PRE) -mmcu=avr128db48 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -x assembler-with-cpp -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -MD -MP -MF "${OBJECTDIR}/_ext/761250667/crc.o.d" -MT "${OBJECTDIR}/_ext/761250667/crc.o.d" -MT ${OBJECTDIR}/_ext/761250667/crc.o -o ${OBJECTDIR}/_ext/761250667/crc.o ../_Lib/crc.S  -DXPRJ_COM1_DEF0=$(CND_CONF)  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/761250667/crc.o.asm.d"
+	
+${OBJECTDIR}/_ext/761250667/protected_io.o: ../_Lib/protected_io.S  .generated_files/flags/COM1_DEF0/c0312e84730a52e5d6452cbedb6bd523d407ec73 .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
+	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o.d 
+	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o 
+	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o.ok ${OBJECTDIR}/_ext/761250667/protected_io.o.err 
+	 ${MP_CPPC} $(MP_EXTRA_AS_PRE) -mmcu=avr128db48 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -x assembler-with-cpp -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -MD -MP -MF "${OBJECTDIR}/_ext/761250667/protected_io.o.d" -MT "${OBJECTDIR}/_ext/761250667/protected_io.o.d" -MT ${OBJECTDIR}/_ext/761250667/protected_io.o -o ${OBJECTDIR}/_ext/761250667/protected_io.o ../_Lib/protected_io.S  -DXPRJ_COM1_DEF0=$(CND_CONF)  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/761250667/protected_io.o.asm.d"
+	
+endif
+
+# ------------------------------------------------------------------------------------
+# Rules for buildStep: compile
+ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+else
+endif
+
+# ------------------------------------------------------------------------------------
+# Rules for buildStep: compileCPP
+ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+${OBJECTDIR}/main.o: main.cpp  .generated_files/flags/COM1_DEF0/aa9d9a377b9c5c95bbce7a0788ce5ec1556e887d .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/main.o.d 
+	@${RM} ${OBJECTDIR}/main.o 
+	 ${MP_CPPC} $(MP_EXTRA_CC_PRE) -mmcu=avr128db48 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS} -g -DDEBUG  -gdwarf-2  -x c++ -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -funsigned-char -funsigned-bitfields -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DF_CPU=8000000UL -DUSEUSART1=DEF0,255,TB0 -DNOINT_UART -Wall -MD -MP -MF "${OBJECTDIR}/main.o.d" -MT "${OBJECTDIR}/main.o.d" -MT ${OBJECTDIR}/main.o  -o ${OBJECTDIR}/main.o main.cpp  -DXPRJ_COM1_DEF0=$(CND_CONF)  $(COMPARISON_BUILD)  -fno-strict-aliasing
+	
+${OBJECTDIR}/_ext/761250667/usarts.o: ../_Lib/usarts.cpp  .generated_files/flags/COM1_DEF0/fdfe07b13f8c2be9079d1f7fbda828ebfc300633 .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
+	@${RM} ${OBJECTDIR}/_ext/761250667/usarts.o.d 
+	@${RM} ${OBJECTDIR}/_ext/761250667/usarts.o 
+	 ${MP_CPPC} $(MP_EXTRA_CC_PRE) -mmcu=avr128db48 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS} -g -DDEBUG  -gdwarf-2  -x c++ -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -funsigned-char -funsigned-bitfields -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DF_CPU=8000000UL -DUSEUSART1=DEF0,255,TB0 -DNOINT_UART -Wall -MD -MP -MF "${OBJECTDIR}/_ext/761250667/usarts.o.d" -MT "${OBJECTDIR}/_ext/761250667/usarts.o.d" -MT ${OBJECTDIR}/_ext/761250667/usarts.o  -o ${OBJECTDIR}/_ext/761250667/usarts.o ../_Lib/usarts.cpp  -DXPRJ_COM1_DEF0=$(CND_CONF)  $(COMPARISON_BUILD)  -fno-strict-aliasing
+	
+else
+${OBJECTDIR}/main.o: main.cpp  .generated_files/flags/COM1_DEF0/47e0374e266ae594edc5112efdd6d2b83e47caec .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/main.o.d 
+	@${RM} ${OBJECTDIR}/main.o 
+	 ${MP_CPPC} $(MP_EXTRA_CC_PRE) -mmcu=avr128db48 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -x c++ -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -funsigned-char -funsigned-bitfields -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DF_CPU=8000000UL -DUSEUSART1=DEF0,255,TB0 -DNOINT_UART -Wall -MD -MP -MF "${OBJECTDIR}/main.o.d" -MT "${OBJECTDIR}/main.o.d" -MT ${OBJECTDIR}/main.o  -o ${OBJECTDIR}/main.o main.cpp  -DXPRJ_COM1_DEF0=$(CND_CONF)  $(COMPARISON_BUILD)  -fno-strict-aliasing
+	
+${OBJECTDIR}/_ext/761250667/usarts.o: ../_Lib/usarts.cpp  .generated_files/flags/COM1_DEF0/dcb7e70ed3842a6f2a137850fada81c991a57266 .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
+	@${RM} ${OBJECTDIR}/_ext/761250667/usarts.o.d 
+	@${RM} ${OBJECTDIR}/_ext/761250667/usarts.o 
+	 ${MP_CPPC} $(MP_EXTRA_CC_PRE) -mmcu=avr128db48 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -x c++ -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -funsigned-char -funsigned-bitfields -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DF_CPU=8000000UL -DUSEUSART1=DEF0,255,TB0 -DNOINT_UART -Wall -MD -MP -MF "${OBJECTDIR}/_ext/761250667/usarts.o.d" -MT "${OBJECTDIR}/_ext/761250667/usarts.o.d" -MT ${OBJECTDIR}/_ext/761250667/usarts.o  -o ${OBJECTDIR}/_ext/761250667/usarts.o ../_Lib/usarts.cpp  -DXPRJ_COM1_DEF0=$(CND_CONF)  $(COMPARISON_BUILD)  -fno-strict-aliasing
+	
+endif
+
+# ------------------------------------------------------------------------------------
+# Rules for buildStep: link
+ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+${DISTDIR}/BootAVR128.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}: ${OBJECTFILES}  nbproject/Makefile-${CND_CONF}.mk    
+	@${MKDIR} ${DISTDIR} 
+	${MP_CPPC} $(MP_EXTRA_LD_PRE) -mmcu=avr128db48 ${PACK_COMMON_OPTIONS}   -gdwarf-2 -D__$(MP_PROCESSOR_OPTION)__  -nostartfiles -Wl,-Map="${DISTDIR}\BootAVR128.X.${IMAGE_TYPE}.map"    -o ${DISTDIR}/BootAVR128.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX} ${OBJECTFILES_QUOTED_IF_SPACED}      -DXPRJ_COM1_DEF0=$(CND_CONF)  $(COMPARISON_BUILD)  -Wl,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_LD_POST)$(MP_LINKER_FILE_OPTION),--defsym=__ICD2RAM=1,--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1 -Wl,--gc-sections -Wl,--start-group  -Wl,-lm -Wl,--end-group 
+	
+	
+	${MP_CC_DIR}\\avr-objdump -h -S "${DISTDIR}/BootAVR128.X.${IMAGE_TYPE}.${DEBUGGABLE_SUFFIX}" > "${DISTDIR}/BootAVR128.X.${IMAGE_TYPE}.lss"
+	
+	
+	
+else
+${DISTDIR}/BootAVR128.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}: ${OBJECTFILES}  nbproject/Makefile-${CND_CONF}.mk   
+	@${MKDIR} ${DISTDIR} 
+	${MP_CPPC} $(MP_EXTRA_LD_PRE) -mmcu=avr128db48 ${PACK_COMMON_OPTIONS}  -D__$(MP_PROCESSOR_OPTION)__  -nostartfiles -Wl,-Map="${DISTDIR}\BootAVR128.X.${IMAGE_TYPE}.map"    -o ${DISTDIR}/BootAVR128.X.${IMAGE_TYPE}.${DEBUGGABLE_SUFFIX} ${OBJECTFILES_QUOTED_IF_SPACED}      -DXPRJ_COM1_DEF0=$(CND_CONF)  $(COMPARISON_BUILD)  -Wl,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_LD_POST)$(MP_LINKER_FILE_OPTION) -Wl,--gc-sections -Wl,--start-group  -Wl,-lm -Wl,--end-group 
+	${MP_CC_DIR}\\avr-objcopy -O ihex "${DISTDIR}/BootAVR128.X.${IMAGE_TYPE}.${DEBUGGABLE_SUFFIX}" "${DISTDIR}/BootAVR128.X.${IMAGE_TYPE}.hex"
+	
+	${MP_CC_DIR}\\avr-objdump -h -S "${DISTDIR}/BootAVR128.X.${IMAGE_TYPE}.${DEBUGGABLE_SUFFIX}" > "${DISTDIR}/BootAVR128.X.${IMAGE_TYPE}.lss"
+	
+	
+	
+endif
+
+
+# Subprojects
+.build-subprojects:
+
+
+# Subprojects
+.clean-subprojects:
+
+# Clean Targets
+.clean-conf: ${CLEAN_SUBPROJECTS}
+	${RM} -r ${OBJECTDIR}
+	${RM} -r ${DISTDIR}
+
+# Enable dependency checking
+.dep.inc: .depcheck-impl
+
+DEPFILES=$(wildcard ${POSSIBLE_DEPFILES})
+ifneq (${DEPFILES},)
+include ${DEPFILES}
+endif

@@ -7,11 +7,9 @@
 #include <tools.h>
 #include <ccp.h>
 
-//#define DBG_IND
-
-#ifdef DBG_IND
- #include <Indicator.hpp>
- extern indicator_t<DIOD> Indicator;
+#ifdef TSTPIN
+ #include <pinout.hpp>
+ extern pinout_t<TSTPIN> tstpin;
 #endif
 
 #define BUSY_GPR1_BIT 0x80  // 0x20 Used TWI0 0x40 TWI1
@@ -43,9 +41,9 @@ public:
 		
 		ccp_write_spm((void *)&NVMCTRL.CTRLA, NVMCTRL_CMD_NONE_gc);		
 		
-		#ifdef DBG_IND
-		Indicator.Off();
-		#endif
+        #ifdef TSTPIN
+        tstpin.Off();
+        #endif
 		
 		GPR.GPR1 &= ~BUSY_GPR1_BIT;
 	}
@@ -62,9 +60,9 @@ public:
 	}
 	INLN void _beginSave(uint16_t adr, void* data, uint8_t cnt)
     {
-		#ifdef DBG_IND
-	    Indicator.On();
-		#endif
+        #ifdef TSTPIN
+        tstpin.On();
+        #endif
 
 		memcpy(buf, data, cnt);		
 

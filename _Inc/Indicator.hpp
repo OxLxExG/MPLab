@@ -126,4 +126,5 @@ class indicator_t
 	}
 };
 
+
 extern indicator_t<DIOD> Indicator;

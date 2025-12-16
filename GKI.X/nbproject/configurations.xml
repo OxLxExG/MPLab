@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="65">
   <logicalFolder name="root" displayName="root" projectFiles="true">
+    <logicalFolder name="GKI4tPoly.X" displayName="GKI4tPoly.X" projectFiles="true">
+      <logicalFolder name="_I" displayName="_I" projectFiles="true">
+      </logicalFolder>
+      <logicalFolder name="dist" displayName="dist" projectFiles="true">
+        <logicalFolder name="default" displayName="default" projectFiles="true">
+          <logicalFolder name="debug" displayName="debug" projectFiles="true">
+          </logicalFolder>
+          <logicalFolder name="production" displayName="production" projectFiles="true">
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+    </logicalFolder>
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
@@ -26,6 +38,7 @@
   <sourceRootList>
     <Elem>../_Lib</Elem>
     <Elem>.</Elem>
+    <Elem>../GKI4tPoly.X</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -101,7 +114,7 @@
         <property key="pack-struct" value="true"/>
         <property key="preprocess-only" value="false"/>
         <property key="preprocessor-macros"
-                  value="F_CPU=8000000UL;ADDRESS_PROCESSOR=3;CLOCK=CLKHT,TA0,CLKOUT;DIOD=PF,2,INV;GK=CMP0,AINP1,TA1;USEUSART2=DEF0,255,TB0;USEUSART3=DEF0,200,SPI_MODE;MX25L256=SP1,ALT1,PF,4,UART2;ADS131=UART3,PB,4,PB,3,PB,5;ADXL356=3,-6,4,0;HMC=PA,4,1,5,-2;PWR=PD,4;BATON=PD,7;LTC2942=I2C0,ALT2;DEBUG"/>
+                  value="F_CPU=8000000UL;ADDRESS_PROCESSOR=3;CLOCK=CLKHT,TA0,CLKOUT;DIOD=PF,2,INV;GK=CMP0,AINP1,TA1;USEUSART2=DEF0,255,TB0;USEUSART3=DEF0,200,SPI_MODE;MX25L256=SP1,ALT1,PF,4,UART2;ADS131=UART3,PB,4,PB,3,PB,5;ADXL356=3,-6,4,0;HMC=PA,4,1,5,-2;PWR=PD,4;BATON=PD,7;LTC2942=I2C0,ALT2;DEBUG;TURBO=UART2,INDIC"/>
         <property key="preprocessor-macros-undefined" value=""/>
         <property key="save-temps" value="false"/>
         <property key="short-calls" value="false"/>

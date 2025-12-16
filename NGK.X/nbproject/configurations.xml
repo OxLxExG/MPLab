@@ -101,7 +101,7 @@
         <property key="pack-struct" value="true"/>
         <property key="preprocess-only" value="false"/>
         <property key="preprocessor-macros"
-                  value="F_CPU=8000000UL;ADDRESS_PROCESSOR=5;CLOCK=CLKHT,TA0,CLKNOOUT;DIOD=PF,2,INV;USEUSART2=DEF0,255,TB0;MX25L256=SP1,ALT1,PF,4,UART2;AIS328SOFT=PB,0,PB,1,PB,2,PB,4;NGK=CMP0,AINP1,TB1,CMP2,AINP2,TB2,CMP1,AINP3,TB3;PWR=PD,4;BATON=PD,7;DEBUG;LTC2942=I2C0,ALT2"/>
+                  value="F_CPU=8000000UL;ADDRESS_PROCESSOR=5;CLOCK=CLKHT,TA0,CLKNOOUT;DIOD=PF,2,INV;USEUSART2=DEF0,255,TB0;MX25L256=SP1,ALT1,PF,4,UART2;AIS328SOFT=PB,0,PB,1,PB,2,PB,4;NGK=CMP0,AINP1,TB1,CMP2,AINP2,TB2,CMP1,AINP3,TB3;PWR=PD,4;BATON=PD,7;DEBUG;LTC2942=I2C0,ALT2;TURBO=UART2,INDIC"/>
         <property key="preprocessor-macros-undefined" value=""/>
         <property key="save-temps" value="false"/>
         <property key="short-calls" value="false"/>

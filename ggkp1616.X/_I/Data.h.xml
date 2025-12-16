@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<root><struct_t tip="01" index="0" eu="mV/10" tname="eep_ggkp_dac_t"><uint8_t tip="10" name="мз"/><uint8_t tip="10" name="бз"/></struct_t><struct_t tip="01" index="1" tname="EepData_t"><struct tip="08" from="32" password="DAC" name="Настройка_DAC" index="0" tname="eep_ggkp_dac_t"/></struct_t><struct_t tip="02" index="2" adr="4" SubAdr="0x11" info="24.11.2025 14:18:27  Tiny1616.2 SubAdr RefLevel=2.5V DAC(1) =10mV" chip="7" serial="1" name="GgkpTiny1616" export="GgkpTiny1616" tname="AllDataStruct_t"/></root>
