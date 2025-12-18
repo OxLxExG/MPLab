@@ -120,14 +120,22 @@ endif
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: assembleWithPreprocess
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+<<<<<<< HEAD
 ${OBJECTDIR}/_ext/761250667/crc.o: ../_Lib/crc.S  .generated_files/flags/default/22532f9f40538f25cc9797f1a0c566d9edd71da5 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+=======
+${OBJECTDIR}/_ext/761250667/crc.o: ../_Lib/crc.S  .generated_files/flags/default/1b841891fdb036e0b9bc010b5a38ca2764f2ef2f .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+>>>>>>> 1e2ebb7c39ea71bec11d11114db458bc0a636ebf
 	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
 	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o.d 
 	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o 
 	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o.ok ${OBJECTDIR}/_ext/761250667/crc.o.err 
 	 ${MP_CPPC} $(MP_EXTRA_AS_PRE) -mmcu=avr128db48 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -DDEBUG  -x assembler-with-cpp -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -I"./_I" -MD -MP -MF "${OBJECTDIR}/_ext/761250667/crc.o.d" -MT "${OBJECTDIR}/_ext/761250667/crc.o.d" -MT ${OBJECTDIR}/_ext/761250667/crc.o -o ${OBJECTDIR}/_ext/761250667/crc.o ../_Lib/crc.S  -DXPRJ_default=$(CND_CONF)  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/761250667/crc.o.asm.d",--defsym=__ICD2RAM=1,--defsym=__MPLAB_DEBUG=1,--gdwarf-2,--defsym=__DEBUG=1
 	
+<<<<<<< HEAD
 ${OBJECTDIR}/_ext/761250667/protected_io.o: ../_Lib/protected_io.S  .generated_files/flags/default/e89238f1bad1595b84bd33929ab279c7d7783a83 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+=======
+${OBJECTDIR}/_ext/761250667/protected_io.o: ../_Lib/protected_io.S  .generated_files/flags/default/4637383c7aac05e38bfc73a7931f3510f170f4e0 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+>>>>>>> 1e2ebb7c39ea71bec11d11114db458bc0a636ebf
 	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
 	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o.d 
 	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o 
@@ -135,14 +143,22 @@ ${OBJECTDIR}/_ext/761250667/protected_io.o: ../_Lib/protected_io.S  .generated_f
 	 ${MP_CPPC} $(MP_EXTRA_AS_PRE) -mmcu=avr128db48 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -DDEBUG  -x assembler-with-cpp -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -I"./_I" -MD -MP -MF "${OBJECTDIR}/_ext/761250667/protected_io.o.d" -MT "${OBJECTDIR}/_ext/761250667/protected_io.o.d" -MT ${OBJECTDIR}/_ext/761250667/protected_io.o -o ${OBJECTDIR}/_ext/761250667/protected_io.o ../_Lib/protected_io.S  -DXPRJ_default=$(CND_CONF)  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/761250667/protected_io.o.asm.d",--defsym=__ICD2RAM=1,--defsym=__MPLAB_DEBUG=1,--gdwarf-2,--defsym=__DEBUG=1
 	
 else
+<<<<<<< HEAD
 ${OBJECTDIR}/_ext/761250667/crc.o: ../_Lib/crc.S  .generated_files/flags/default/536ad727fd1a9a9c1a2111731775c6b9f7a0622b .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+=======
+${OBJECTDIR}/_ext/761250667/crc.o: ../_Lib/crc.S  .generated_files/flags/default/bbb18c36cb1c95cfdb25a3f9d1abd4645a95bd5f .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+>>>>>>> 1e2ebb7c39ea71bec11d11114db458bc0a636ebf
 	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
 	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o.d 
 	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o 
 	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o.ok ${OBJECTDIR}/_ext/761250667/crc.o.err 
 	 ${MP_CPPC} $(MP_EXTRA_AS_PRE) -mmcu=avr128db48 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -x assembler-with-cpp -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -I"./_I" -MD -MP -MF "${OBJECTDIR}/_ext/761250667/crc.o.d" -MT "${OBJECTDIR}/_ext/761250667/crc.o.d" -MT ${OBJECTDIR}/_ext/761250667/crc.o -o ${OBJECTDIR}/_ext/761250667/crc.o ../_Lib/crc.S  -DXPRJ_default=$(CND_CONF)  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/761250667/crc.o.asm.d"
 	
+<<<<<<< HEAD
 ${OBJECTDIR}/_ext/761250667/protected_io.o: ../_Lib/protected_io.S  .generated_files/flags/default/8832de708a2fc018da0b0810f6c16c6b07a5e16f .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+=======
+${OBJECTDIR}/_ext/761250667/protected_io.o: ../_Lib/protected_io.S  .generated_files/flags/default/c55d129aac2c7c5af4b227cf0e57dcb2acc58b83 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+>>>>>>> 1e2ebb7c39ea71bec11d11114db458bc0a636ebf
 	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
 	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o.d 
 	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o 
@@ -160,26 +176,42 @@ endif
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: compileCPP
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+<<<<<<< HEAD
 ${OBJECTDIR}/main.o: main.cpp  .generated_files/flags/default/ba7c486091a6f8f5e859bae6d66fb82fe667be96 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+=======
+${OBJECTDIR}/main.o: main.cpp  .generated_files/flags/default/4e5d87940b5d0eac553f22ac38f1548b3d101bb7 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+>>>>>>> 1e2ebb7c39ea71bec11d11114db458bc0a636ebf
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/main.o.d 
 	@${RM} ${OBJECTDIR}/main.o 
 	 ${MP_CPPC} $(MP_EXTRA_CC_PRE) -mmcu=avr128db48 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS} -g -DDEBUG  -gdwarf-2  -x c++ -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -I"./_I" -funsigned-char -funsigned-bitfields -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DF_CPU=8000000UL -DADDRESS_PROCESSOR=5 -DCLOCK=CLKHT,TA0,CLKNOOUT -DDIOD=PF,2,INV -DUSEUSART2=DEF0,255,TB0 -DUSETWI0=ALT2 -DMX25L256=SP1,ALT1,PF,4,UART2 -DAIS328SOFT=PB,0,PB,1,PB,2,PB,4 -DNNK=CMP0,AINP1,TB1,CMP2,AINP2,TB2 -DPWR=PD,4 -DBATON=PD,7 -DLTC2942=I2C0,ALT2 -DNDEBUG -DTURBO=UART2,INDIC -Wall -MD -MP -MF "${OBJECTDIR}/main.o.d" -MT "${OBJECTDIR}/main.o.d" -MT ${OBJECTDIR}/main.o  -o ${OBJECTDIR}/main.o main.cpp  -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -fno-strict-aliasing
 	
+<<<<<<< HEAD
 ${OBJECTDIR}/_ext/761250667/usarts.o: ../_Lib/usarts.cpp  .generated_files/flags/default/81e4a081f1eac5765bd0b58c1120cf5f45bb4026 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+=======
+${OBJECTDIR}/_ext/761250667/usarts.o: ../_Lib/usarts.cpp  .generated_files/flags/default/c11046b269fa14b56e7cec7af5312e1e31a6c529 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+>>>>>>> 1e2ebb7c39ea71bec11d11114db458bc0a636ebf
 	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
 	@${RM} ${OBJECTDIR}/_ext/761250667/usarts.o.d 
 	@${RM} ${OBJECTDIR}/_ext/761250667/usarts.o 
 	 ${MP_CPPC} $(MP_EXTRA_CC_PRE) -mmcu=avr128db48 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS} -g -DDEBUG  -gdwarf-2  -x c++ -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -I"./_I" -funsigned-char -funsigned-bitfields -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DF_CPU=8000000UL -DADDRESS_PROCESSOR=5 -DCLOCK=CLKHT,TA0,CLKNOOUT -DDIOD=PF,2,INV -DUSEUSART2=DEF0,255,TB0 -DUSETWI0=ALT2 -DMX25L256=SP1,ALT1,PF,4,UART2 -DAIS328SOFT=PB,0,PB,1,PB,2,PB,4 -DNNK=CMP0,AINP1,TB1,CMP2,AINP2,TB2 -DPWR=PD,4 -DBATON=PD,7 -DLTC2942=I2C0,ALT2 -DNDEBUG -DTURBO=UART2,INDIC -Wall -MD -MP -MF "${OBJECTDIR}/_ext/761250667/usarts.o.d" -MT "${OBJECTDIR}/_ext/761250667/usarts.o.d" -MT ${OBJECTDIR}/_ext/761250667/usarts.o  -o ${OBJECTDIR}/_ext/761250667/usarts.o ../_Lib/usarts.cpp  -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -fno-strict-aliasing
 	
 else
+<<<<<<< HEAD
 ${OBJECTDIR}/main.o: main.cpp  .generated_files/flags/default/a77929152975444d56382dc906fdc92da34152ef .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+=======
+${OBJECTDIR}/main.o: main.cpp  .generated_files/flags/default/b543d7aaf49cb7c8f6a0f4822af559c2ae757140 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+>>>>>>> 1e2ebb7c39ea71bec11d11114db458bc0a636ebf
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/main.o.d 
 	@${RM} ${OBJECTDIR}/main.o 
 	 ${MP_CPPC} $(MP_EXTRA_CC_PRE) -mmcu=avr128db48 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -x c++ -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -I"./_I" -funsigned-char -funsigned-bitfields -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DF_CPU=8000000UL -DADDRESS_PROCESSOR=5 -DCLOCK=CLKHT,TA0,CLKNOOUT -DDIOD=PF,2,INV -DUSEUSART2=DEF0,255,TB0 -DUSETWI0=ALT2 -DMX25L256=SP1,ALT1,PF,4,UART2 -DAIS328SOFT=PB,0,PB,1,PB,2,PB,4 -DNNK=CMP0,AINP1,TB1,CMP2,AINP2,TB2 -DPWR=PD,4 -DBATON=PD,7 -DLTC2942=I2C0,ALT2 -DNDEBUG -DTURBO=UART2,INDIC -Wall -MD -MP -MF "${OBJECTDIR}/main.o.d" -MT "${OBJECTDIR}/main.o.d" -MT ${OBJECTDIR}/main.o  -o ${OBJECTDIR}/main.o main.cpp  -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -fno-strict-aliasing
 	
+<<<<<<< HEAD
 ${OBJECTDIR}/_ext/761250667/usarts.o: ../_Lib/usarts.cpp  .generated_files/flags/default/d7bc76c6afab4a92a4fcb1475a2388db3c3292f2 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+=======
+${OBJECTDIR}/_ext/761250667/usarts.o: ../_Lib/usarts.cpp  .generated_files/flags/default/e9cbdbed73ccca5f979ac230fbc215818ceee2a0 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+>>>>>>> 1e2ebb7c39ea71bec11d11114db458bc0a636ebf
 	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
 	@${RM} ${OBJECTDIR}/_ext/761250667/usarts.o.d 
 	@${RM} ${OBJECTDIR}/_ext/761250667/usarts.o 

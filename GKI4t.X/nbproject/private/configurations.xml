@@ -5,7 +5,11 @@
   <confs>
     <conf name="default" type="2">
       <platformToolSN>:=MPLABComm-USB-Microchip:=&lt;vid>04D8:=&lt;pid>9018:=&lt;rev>0100:=&lt;man>Microchip Technology Incorporated:=&lt;prod>MPLAB Snap ICD:=&lt;sn>BUR204481134:=&lt;drv>x:=&lt;xpt>b:=end</platformToolSN>
+<<<<<<< HEAD
       <languageToolchainDir>C:\IDEs\avr-gcc-15.2.0-x64-windows\bin</languageToolchainDir>
+=======
+      <languageToolchainDir>D:\IDEs\ArmelStudio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin</languageToolchainDir>
+>>>>>>> 1e2ebb7c39ea71bec11d11114db458bc0a636ebf
       <mdbdebugger version="1">
         <placeholder1>place holder 1</placeholder1>
         <placeholder2>place holder 2</placeholder2>
