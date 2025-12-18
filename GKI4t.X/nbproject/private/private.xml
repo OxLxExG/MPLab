@@ -5,6 +5,9 @@
         <group>
             <file>file:/D:/Projects/Mplab/GKI4t.X/main.cpp</file>
         </group>
-        <group name="Mplab"/>
+        <group name="Mplab">
+            <file>file:/D:/Projects/MPLab/GKI4t.X/ADS131.hpp</file>
+            <file>file:/D:/Projects/MPLab/GKI4t.X/main.cpp</file>
+        </group>
     </open-files>
 </project-private>

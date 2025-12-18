@@ -107,6 +107,7 @@ INST_CLOCK;
 
 indicator_t<DIOD> Indicator;
 static pinout_t<PWR> power;
+static pinout_t<PWRGK> power_gk;
 static pinout_t<BATON> batOn;
 static adxl365_t<ADXL356> adx356;
 hmc_t<HMC> hmc;
@@ -273,26 +274,6 @@ static void UpdateWorkData(void)
 	workData.gk.gk = saveGK;
 	workData.dat.gk_m = saveGK * daclevel.kGK;
 }
-static bool Powered(void)
-{
-	return power.IsOn();
-}
-
-static void WakeUp(void)
-{
-	batOn.On();
-	power.On();
-	if (!ads131.IsOn) ads131.WakeUp();
-}
-static void StandBy(bool fullStop)
-{
-	// выполняется вконце фрейма (по даташиту) 
-	// (после разрешения прерываний sei() в обработчике ads131.DataReadyHandler();)
-	ads131.AddSyncFrameStandBy();	
-	power.Off();
-	if(fullStop) batOn.Off();
-	else batOn.On();
-}
 
 // СОБЫТИЕ: постановка на задержку пользователем
 static void ResetErrorsInEEP(void)
@@ -420,6 +401,35 @@ static void ResetWdrADC(void)
 	WdrADC = 0;
 }
 
+
+static bool Powered(void)
+{
+	return power.IsOn();
+}
+
+static bool AdcWakeUp;
+
+static void WakeUp(void)
+{
+	batOn.On();
+	power.On();
+    power_gk.On();
+	if (!ads131.IsOn) 
+    {
+        ads131.WakeUp();
+        AdcWakeUp = true;
+    }
+}
+static void StandBy(bool fullStop)
+{
+	// выполняется вконце фрейма (по даташиту) 
+	// (после разрешения прерываний sei() в обработчике ads131.DataReadyHandler();)
+	if (ads131.IsOn) ads131.AddSyncFrameStandBy();	
+	power.Off();
+    power_gk.Off();
+	if(fullStop) batOn.Off();
+	else batOn.On();
+}
 static void RunCmd(void)
 {
 	switch (Com.buf[CMD_POS])
@@ -711,6 +721,11 @@ int main(void)
 		if (ads131.checkDataReady())
 		{
 			ads131.DataReadyHandler();
+            if (AdcWakeUp)
+            {
+                AdcWakeUp = false;
+                AddSyncFrameSetupADC();
+            }
 			adx356.SummData(&ads131.data[0]);
 			hmc.SummData(&ads131.data[0]);
 			WdrADC++;

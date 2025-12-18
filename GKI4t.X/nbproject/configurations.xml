@@ -35,7 +35,7 @@
         <targetDevice>AVR128DB48</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>noID</platformTool>
+        <platformTool>snap</platformTool>
         <languageToolchain>AVR</languageToolchain>
         <languageToolchainVersion>5.4.0</languageToolchainVersion>
         <platform>3</platform>
@@ -101,7 +101,7 @@
         <property key="pack-struct" value="true"/>
         <property key="preprocess-only" value="false"/>
         <property key="preprocessor-macros"
-                  value="F_CPU=8000000UL;ADDRESS_PROCESSOR=3;CLOCK=CLKHT,TA0,CLKOUT;DIOD=PF,2,INV;GK=CMP0,AINP1,TA1;USEUSART2=DEF0,1024,TB0;USEUSART3=DEF0,200,SPI_MODE;MX25L256=SP1,ALT1,PF,4,UART2;ADS131=UART3,PB,4,PB,3,PB,5;ADXL356=3,-6,4,0;HMC=PA,4,1,5,-2;PWR=PD,4;BATON=PD,7;LTC2942=I2C0,ALT2;DEBUG;TURBO=UART2,INDIC"/>
+                  value="F_CPU=8000000UL;ADDRESS_PROCESSOR=3;CLOCK=CLKHT,TA0,CLKOUT;DIOD=PF,2,INV;GK=CMP0,AINP1,TA1;USEUSART2=DEF0,1024,TB0;USEUSART3=DEF0,200,SPI_MODE;MX25L256=SP1,ALT1,PF,4,UART2;ADS131=UART3,PB,4,PB,3,PB,5;ADXL356=3,-6,4,0;HMC=PA,4,1,5,-2;PWR=PD,4;BATON=PD,7;LTC2942=I2C0,ALT2;DEBUG;TURBO=UART2,INDIC;PWRGK=PD,2"/>
         <property key="preprocessor-macros-undefined" value=""/>
         <property key="save-temps" value="false"/>
         <property key="short-calls" value="false"/>

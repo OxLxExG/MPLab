@@ -98,14 +98,14 @@ endif
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: assembleWithPreprocess
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
-${OBJECTDIR}/_ext/761250667/crc.o: ../_Lib/crc.S  .generated_files/flags/COM1_DEF0/5cae5e1188c03937c22620c2651b31c773a2cafa .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/761250667/crc.o: ../_Lib/crc.S  .generated_files/flags/COM1_DEF0/fa56e37f7e2688940f6704d9d2c690cd660c72af .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
 	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o.d 
 	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o 
 	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o.ok ${OBJECTDIR}/_ext/761250667/crc.o.err 
 	 ${MP_CPPC} $(MP_EXTRA_AS_PRE) -mmcu=avr128db48 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -DDEBUG  -x assembler-with-cpp -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -MD -MP -MF "${OBJECTDIR}/_ext/761250667/crc.o.d" -MT "${OBJECTDIR}/_ext/761250667/crc.o.d" -MT ${OBJECTDIR}/_ext/761250667/crc.o -o ${OBJECTDIR}/_ext/761250667/crc.o ../_Lib/crc.S  -DXPRJ_COM1_DEF0=$(CND_CONF)  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/761250667/crc.o.asm.d",--defsym=__ICD2RAM=1,--defsym=__MPLAB_DEBUG=1,--gdwarf-2,--defsym=__DEBUG=1
 	
-${OBJECTDIR}/_ext/761250667/protected_io.o: ../_Lib/protected_io.S  .generated_files/flags/COM1_DEF0/1f4ccb0623971940c6d8e9090aeb06657c0ebacc .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/761250667/protected_io.o: ../_Lib/protected_io.S  .generated_files/flags/COM1_DEF0/23843006232b64b98744f14b2696a672727cabc0 .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
 	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o.d 
 	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o 
@@ -113,14 +113,14 @@ ${OBJECTDIR}/_ext/761250667/protected_io.o: ../_Lib/protected_io.S  .generated_f
 	 ${MP_CPPC} $(MP_EXTRA_AS_PRE) -mmcu=avr128db48 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -DDEBUG  -x assembler-with-cpp -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -MD -MP -MF "${OBJECTDIR}/_ext/761250667/protected_io.o.d" -MT "${OBJECTDIR}/_ext/761250667/protected_io.o.d" -MT ${OBJECTDIR}/_ext/761250667/protected_io.o -o ${OBJECTDIR}/_ext/761250667/protected_io.o ../_Lib/protected_io.S  -DXPRJ_COM1_DEF0=$(CND_CONF)  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/761250667/protected_io.o.asm.d",--defsym=__ICD2RAM=1,--defsym=__MPLAB_DEBUG=1,--gdwarf-2,--defsym=__DEBUG=1
 	
 else
-${OBJECTDIR}/_ext/761250667/crc.o: ../_Lib/crc.S  .generated_files/flags/COM1_DEF0/e143efd1fbff5d0ea8289f476f3485e891fc43d1 .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/761250667/crc.o: ../_Lib/crc.S  .generated_files/flags/COM1_DEF0/392dd667f951f441082e625adc590b611eff20ee .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
 	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o.d 
 	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o 
 	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o.ok ${OBJECTDIR}/_ext/761250667/crc.o.err 
 	 ${MP_CPPC} $(MP_EXTRA_AS_PRE) -mmcu=avr128db48 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -x assembler-with-cpp -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -MD -MP -MF "${OBJECTDIR}/_ext/761250667/crc.o.d" -MT "${OBJECTDIR}/_ext/761250667/crc.o.d" -MT ${OBJECTDIR}/_ext/761250667/crc.o -o ${OBJECTDIR}/_ext/761250667/crc.o ../_Lib/crc.S  -DXPRJ_COM1_DEF0=$(CND_CONF)  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/761250667/crc.o.asm.d"
 	
-${OBJECTDIR}/_ext/761250667/protected_io.o: ../_Lib/protected_io.S  .generated_files/flags/COM1_DEF0/c0312e84730a52e5d6452cbedb6bd523d407ec73 .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/761250667/protected_io.o: ../_Lib/protected_io.S  .generated_files/flags/COM1_DEF0/4ede408d22e86b854bb825a7e67c66bfa8d91138 .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
 	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o.d 
 	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o 
@@ -138,26 +138,26 @@ endif
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: compileCPP
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
-${OBJECTDIR}/main.o: main.cpp  .generated_files/flags/COM1_DEF0/aa9d9a377b9c5c95bbce7a0788ce5ec1556e887d .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/main.o: main.cpp  .generated_files/flags/COM1_DEF0/858ddd8b70b8dfccb4a3fdcdaacd7f476d068bf4 .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/main.o.d 
 	@${RM} ${OBJECTDIR}/main.o 
 	 ${MP_CPPC} $(MP_EXTRA_CC_PRE) -mmcu=avr128db48 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS} -g -DDEBUG  -gdwarf-2  -x c++ -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -funsigned-char -funsigned-bitfields -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DF_CPU=8000000UL -DUSEUSART1=DEF0,255,TB0 -DNOINT_UART -Wall -MD -MP -MF "${OBJECTDIR}/main.o.d" -MT "${OBJECTDIR}/main.o.d" -MT ${OBJECTDIR}/main.o  -o ${OBJECTDIR}/main.o main.cpp  -DXPRJ_COM1_DEF0=$(CND_CONF)  $(COMPARISON_BUILD)  -fno-strict-aliasing
 	
-${OBJECTDIR}/_ext/761250667/usarts.o: ../_Lib/usarts.cpp  .generated_files/flags/COM1_DEF0/fdfe07b13f8c2be9079d1f7fbda828ebfc300633 .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/761250667/usarts.o: ../_Lib/usarts.cpp  .generated_files/flags/COM1_DEF0/cc81e6d86a0fe2ce08697f2398cdb4dbcf95da6c .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
 	@${RM} ${OBJECTDIR}/_ext/761250667/usarts.o.d 
 	@${RM} ${OBJECTDIR}/_ext/761250667/usarts.o 
 	 ${MP_CPPC} $(MP_EXTRA_CC_PRE) -mmcu=avr128db48 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS} -g -DDEBUG  -gdwarf-2  -x c++ -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -funsigned-char -funsigned-bitfields -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DF_CPU=8000000UL -DUSEUSART1=DEF0,255,TB0 -DNOINT_UART -Wall -MD -MP -MF "${OBJECTDIR}/_ext/761250667/usarts.o.d" -MT "${OBJECTDIR}/_ext/761250667/usarts.o.d" -MT ${OBJECTDIR}/_ext/761250667/usarts.o  -o ${OBJECTDIR}/_ext/761250667/usarts.o ../_Lib/usarts.cpp  -DXPRJ_COM1_DEF0=$(CND_CONF)  $(COMPARISON_BUILD)  -fno-strict-aliasing
 	
 else
-${OBJECTDIR}/main.o: main.cpp  .generated_files/flags/COM1_DEF0/47e0374e266ae594edc5112efdd6d2b83e47caec .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/main.o: main.cpp  .generated_files/flags/COM1_DEF0/23e74e18c4785cefcfccafb9d8162cd78688e1f1 .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/main.o.d 
 	@${RM} ${OBJECTDIR}/main.o 
 	 ${MP_CPPC} $(MP_EXTRA_CC_PRE) -mmcu=avr128db48 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -x c++ -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -funsigned-char -funsigned-bitfields -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DF_CPU=8000000UL -DUSEUSART1=DEF0,255,TB0 -DNOINT_UART -Wall -MD -MP -MF "${OBJECTDIR}/main.o.d" -MT "${OBJECTDIR}/main.o.d" -MT ${OBJECTDIR}/main.o  -o ${OBJECTDIR}/main.o main.cpp  -DXPRJ_COM1_DEF0=$(CND_CONF)  $(COMPARISON_BUILD)  -fno-strict-aliasing
 	
-${OBJECTDIR}/_ext/761250667/usarts.o: ../_Lib/usarts.cpp  .generated_files/flags/COM1_DEF0/dcb7e70ed3842a6f2a137850fada81c991a57266 .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/_ext/761250667/usarts.o: ../_Lib/usarts.cpp  .generated_files/flags/COM1_DEF0/8fb1243156145617232cac4e868be7fa86a17110 .generated_files/flags/COM1_DEF0/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
 	@${RM} ${OBJECTDIR}/_ext/761250667/usarts.o.d 
 	@${RM} ${OBJECTDIR}/_ext/761250667/usarts.o 
