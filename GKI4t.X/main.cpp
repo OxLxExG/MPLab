@@ -18,6 +18,7 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 #include <ccp.h>
+#include <math.h>
 #include <getarg.h>
 #include <usarts.hpp>
 #include <mx25l256.hpp>
@@ -107,6 +108,7 @@ INST_CLOCK;
 
 indicator_t<DIOD> Indicator;
 static pinout_t<PWR> power;
+static pinout_t<PWRGK> power_gk;
 static pinout_t<BATON> batOn;
 static adxl365_t<ADXL356> adx356;
 hmc_t<HMC> hmc;
@@ -282,6 +284,7 @@ static void WakeUp(void)
 {
 	batOn.On();
 	power.On();
+    power_gk.On();
 	if (!ads131.IsOn) ads131.WakeUp();
 }
 static void StandBy(bool fullStop)
@@ -290,6 +293,7 @@ static void StandBy(bool fullStop)
 	// (после разрешения прерываний sei() в обработчике ads131.DataReadyHandler();)
 	ads131.AddSyncFrameStandBy();	
 	power.Off();
+    power_gk.Off();
 	if(fullStop) batOn.Off();
 	else batOn.On();
 }
@@ -338,14 +342,14 @@ static void UpdateFromEEP(void)
 // вызывается после ads131.WakeUp();
 static void AddSyncFrameSetupADC(void)
 {	
-	union rwreg_u rw;
+	union rwreg_u rw={0};
 	rw.wr.preambula = PRE_WREG;
 	rw.wr.adr = 3;
 	rw.wr.cnt = 4;
 	Uart.buf[0] =rw.bt[1]; //h
 	Uart.buf[1] =rw.bt[0]; //l
 
-	union clockreg_u clk;
+	union clockreg_u clk={0};
 	clk.clk.ch0_en = 1;
 	clk.clk.ch1_en = 1;
 	clk.clk.ch2_en = 1;
@@ -359,21 +363,21 @@ static void AddSyncFrameSetupADC(void)
 	Uart.buf[3] =clk.bt[1]; //h
 	Uart.buf[4] =clk.bt[0]; //l
 
-	union gain1reg_u g1;
+	union gain1reg_u g1={0};
 //	g1.gain.pgagain1 = 1;
 //	g1.gain.pgagain2 = 1;
 //	g1.gain.pgagain3 = 1;
 	Uart.buf[6] =g1.bt[1]; //h no gain
 	Uart.buf[7] =g1.bt[0]; //l no gain
 		
-	union gain2reg_u g2;
+	union gain2reg_u g2={0};
 //	g2.gain.pgagain4 = 1;
 //	g2.gain.pgagain6 = 1;
 //	g2.gain.pgagain5 = 1;
 	Uart.buf[9] =g2.bt[1]; //h no gain
 	Uart.buf[10] =g2.bt[0]; //l no gain
 
-	union cfgreg_u cfg;
+	union cfgreg_u cfg={0};
 	cfg.cfg.gc_en = 1; // global chop
 	cfg.cfg.gc_delay = 0b11; //default delay
 	Uart.buf[12] =cfg.bt[1]; //h
@@ -667,15 +671,9 @@ int main(void)
 	Com.intMode();
 	Com.enableRxD();
 	
-	// Reset, setup Uart, Enable DataReady Interrupt, wait Ready
-   	ads131.Init();	   
-	// будет команда по DataReady (после разрешения прерываний sei() в обработчике ads131.DataReadyHandler();)
-	AddSyncFrameSetupADC();
 	
 	ltc2942c::twi.CallbackRegister(ltc2942c::I2CErr);
-	
-	sei();	
-	
+		
 	UpdateFromEEP();
 	
 	// включаем питание
@@ -688,8 +686,14 @@ int main(void)
 		ads131.AddSyncFrameStandBy();
 	} 
 	
+	// будет команда по DataReady (после разрешения прерываний sei() в обработчике ads131.DataReadyHandler();)
+	AddSyncFrameSetupADC();
+	// Reset, setup Uart, Enable DataReady Interrupt, wait Ready
+   	ads131.Init();	   
 	//Ram.ResetPageBase();
 	//for (uint32_t i = 0; i < 131072; i++) Ram.writePage();
+	sei();	
+
     while (1) 
     {	/// GPR.GPR0: uarts data ready
 		///           70ms ticks
