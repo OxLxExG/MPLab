@@ -341,14 +341,14 @@ static void AddSyncFrameSetupADC(void)
 	Uart.buf[3] =clk.bt[1]; //h
 	Uart.buf[4] =clk.bt[0]; //l
 
-	union gain1reg_u g1;
+	union gain1reg_u g1={0};
 //	g1.gain.pgagain1 = 1;
 //	g1.gain.pgagain2 = 1;
 //	g1.gain.pgagain3 = 1;
 	Uart.buf[6] =g1.bt[1]; //h no gain
 	Uart.buf[7] =g1.bt[0]; //l no gain
 		
-	union gain2reg_u g2;
+	union gain2reg_u g2={0};
 //	g2.gain.pgagain4 = 1;
 //	g2.gain.pgagain6 = 1;
 //	g2.gain.pgagain5 = 1;
