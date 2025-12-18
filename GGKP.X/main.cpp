@@ -343,7 +343,9 @@ static void RunCmd(void)
 					eep.SaveBytes(EEP_OFFSET_KADR_CHARGE + sizeof(save_state_t)
 					 + offsetof(charge_t,AccCharge) ,&data, sizeof(float));					
 					b->ResetFlag = 0;
-					FLASH_write_flash_n(0, dptr, n+2);					
+					FLASH_write_flash_n(0, dptr, n+2);	
+                    UpdateFromEEP(false, dptr);
+                    
 				}
 			}
 			else if (from == 8) // vat_vol 
