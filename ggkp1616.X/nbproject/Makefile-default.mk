@@ -120,22 +120,14 @@ endif
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: assembleWithPreprocess
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
-<<<<<<< HEAD
 ${OBJECTDIR}/_ext/761250667/crc.o: ../_Lib/crc.S  .generated_files/flags/default/283dfd6b8450fa55904cc1ca3f4b4ec8b9790595 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-=======
-${OBJECTDIR}/_ext/761250667/crc.o: ../_Lib/crc.S  .generated_files/flags/default/1eccb7340ae11e9c4043bffc933e4ffc53f78928 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
->>>>>>> 1e2ebb7c39ea71bec11d11114db458bc0a636ebf
 	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
 	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o.d 
 	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o 
 	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o.ok ${OBJECTDIR}/_ext/761250667/crc.o.err 
 	 ${MP_CPPC} $(MP_EXTRA_AS_PRE) -mmcu=attiny1616 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -DDEBUG  -x assembler-with-cpp -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -I"_I" -MD -MP -MF "${OBJECTDIR}/_ext/761250667/crc.o.d" -MT "${OBJECTDIR}/_ext/761250667/crc.o.d" -MT ${OBJECTDIR}/_ext/761250667/crc.o -o ${OBJECTDIR}/_ext/761250667/crc.o ../_Lib/crc.S  -DXPRJ_default=$(CND_CONF)  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/761250667/crc.o.asm.d",--defsym=__ICD2RAM=1,--defsym=__MPLAB_DEBUG=1,--gdwarf-2,--defsym=__DEBUG=1
 	
-<<<<<<< HEAD
 ${OBJECTDIR}/_ext/761250667/protected_io.o: ../_Lib/protected_io.S  .generated_files/flags/default/61e2e35fdd129605581e41103ca37440370eb8f6 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-=======
-${OBJECTDIR}/_ext/761250667/protected_io.o: ../_Lib/protected_io.S  .generated_files/flags/default/22bdd2bd3ac6a26f1412377d867ec92e14960d65 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
->>>>>>> 1e2ebb7c39ea71bec11d11114db458bc0a636ebf
 	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
 	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o.d 
 	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o 
@@ -143,22 +135,14 @@ ${OBJECTDIR}/_ext/761250667/protected_io.o: ../_Lib/protected_io.S  .generated_f
 	 ${MP_CPPC} $(MP_EXTRA_AS_PRE) -mmcu=attiny1616 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -DDEBUG  -x assembler-with-cpp -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -I"_I" -MD -MP -MF "${OBJECTDIR}/_ext/761250667/protected_io.o.d" -MT "${OBJECTDIR}/_ext/761250667/protected_io.o.d" -MT ${OBJECTDIR}/_ext/761250667/protected_io.o -o ${OBJECTDIR}/_ext/761250667/protected_io.o ../_Lib/protected_io.S  -DXPRJ_default=$(CND_CONF)  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/761250667/protected_io.o.asm.d",--defsym=__ICD2RAM=1,--defsym=__MPLAB_DEBUG=1,--gdwarf-2,--defsym=__DEBUG=1
 	
 else
-<<<<<<< HEAD
 ${OBJECTDIR}/_ext/761250667/crc.o: ../_Lib/crc.S  .generated_files/flags/default/a951ba4ae77194dbc86573569929bc528c64a86 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-=======
-${OBJECTDIR}/_ext/761250667/crc.o: ../_Lib/crc.S  .generated_files/flags/default/7c40ddeb10bdad06c927161f8e02b6c28524e035 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
->>>>>>> 1e2ebb7c39ea71bec11d11114db458bc0a636ebf
 	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
 	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o.d 
 	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o 
 	@${RM} ${OBJECTDIR}/_ext/761250667/crc.o.ok ${OBJECTDIR}/_ext/761250667/crc.o.err 
 	 ${MP_CPPC} $(MP_EXTRA_AS_PRE) -mmcu=attiny1616 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS}  -x assembler-with-cpp -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -I"_I" -MD -MP -MF "${OBJECTDIR}/_ext/761250667/crc.o.d" -MT "${OBJECTDIR}/_ext/761250667/crc.o.d" -MT ${OBJECTDIR}/_ext/761250667/crc.o -o ${OBJECTDIR}/_ext/761250667/crc.o ../_Lib/crc.S  -DXPRJ_default=$(CND_CONF)  -Wa,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_AS_POST),-MD="${OBJECTDIR}/_ext/761250667/crc.o.asm.d"
 	
-<<<<<<< HEAD
 ${OBJECTDIR}/_ext/761250667/protected_io.o: ../_Lib/protected_io.S  .generated_files/flags/default/15e29eafbbab9fa4aed0b0ae61e77f4116a2a719 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-=======
-${OBJECTDIR}/_ext/761250667/protected_io.o: ../_Lib/protected_io.S  .generated_files/flags/default/f8a2b9e0941db801500e6083e0d34edf1a168243 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
->>>>>>> 1e2ebb7c39ea71bec11d11114db458bc0a636ebf
 	@${MKDIR} "${OBJECTDIR}/_ext/761250667" 
 	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o.d 
 	@${RM} ${OBJECTDIR}/_ext/761250667/protected_io.o 
@@ -176,22 +160,14 @@ endif
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: compileCPP
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
-<<<<<<< HEAD
 ${OBJECTDIR}/main.o: main.cpp  .generated_files/flags/default/abd5968fce265167c1bc76d917bcee245bb111b .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-=======
-${OBJECTDIR}/main.o: main.cpp  .generated_files/flags/default/f9367f505312d877da9e1791650108273928373b .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
->>>>>>> 1e2ebb7c39ea71bec11d11114db458bc0a636ebf
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/main.o.d 
 	@${RM} ${OBJECTDIR}/main.o 
 	 ${MP_CPPC} $(MP_EXTRA_CC_PRE) -mmcu=attiny1616 ${PACK_COMPILER_OPTIONS} ${PACK_COMMON_OPTIONS} -g -DDEBUG  -gdwarf-2  -x c++ -c -D__$(MP_PROCESSOR_OPTION)__  -I"../_Inc" -I"_I" -funsigned-char -funsigned-bitfields -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -DF_CPU=10000000UL -DADDRESS_PROCESSOR=4 -Wall -MD -MP -MF "${OBJECTDIR}/main.o.d" -MT "${OBJECTDIR}/main.o.d" -MT ${OBJECTDIR}/main.o  -o ${OBJECTDIR}/main.o main.cpp  -DXPRJ_default=$(CND_CONF)  $(COMPARISON_BUILD)  -fno-strict-aliasing
 	
 else
-<<<<<<< HEAD
 ${OBJECTDIR}/main.o: main.cpp  .generated_files/flags/default/3d39c71a78e335b41fe55850ec21d776eba1bace .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-=======
-${OBJECTDIR}/main.o: main.cpp  .generated_files/flags/default/1742658996232dc6cba1d58f4940de2314123d1 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
->>>>>>> 1e2ebb7c39ea71bec11d11114db458bc0a636ebf
 	@${MKDIR} "${OBJECTDIR}" 
 	@${RM} ${OBJECTDIR}/main.o.d 
 	@${RM} ${OBJECTDIR}/main.o 

@@ -101,7 +101,7 @@
         <property key="pack-struct" value="true"/>
         <property key="preprocess-only" value="false"/>
         <property key="preprocessor-macros"
-                  value="F_CPU=8000000UL;USEUSART1=DEF0,255,TB0;NOINT_UART"/>
+                  value="F_CPU=8000000UL;USEUSART2=DEF0,255,TB0;NOINT_UART"/>
         <property key="preprocessor-macros-undefined" value=""/>
         <property key="save-temps" value="false"/>
         <property key="short-calls" value="false"/>

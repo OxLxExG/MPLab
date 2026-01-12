@@ -136,14 +136,14 @@ typedef struct __attribute__((packed))
 {
 	//-readonly
 	uint8_t status;
-	//-color = 0x7F0000FF
+	//-color = 0x0000FF
 	//-eu=Ah
 	//-name=Израсходованная_емкость
 	//- digits=10
 	//- precision=7
 	float AccCharge;
 	//- name=Оставшаяся_емкость
-	//-color = 0x7F0000FF
+	//-color = 0x0000FF
 	//-eu=Ah
 	//-readonly
 	//- digits=5
@@ -151,15 +151,15 @@ typedef struct __attribute__((packed))
 	float remainCh;
 	//-readonly
 	//- name=Ресурс
-	//-color = 0x7F0000FF
+	//-color = 0x0000FF
 	//-eu=%
 	uint8_t procent;
 	//-readonly
 	//- name=Осталось_часов
-	//-color = 0x7F0000FF
+	//-color = 0x0000FF
 	//-eu=h
 	uint16_t HoursLleft;
-	//-color = 0x7F1FFF00
+	//-color = 0x1FFF00
 	//- eu = C
 	//- name = Температура
 	//-readonly
@@ -207,7 +207,7 @@ typedef struct __attribute__((packed))
 typedef struct __attribute__((packed))
 {
 	//-name=Ёмкость_батареи
-	//-color = 0x7F0000FF
+	//-color = 0x0000FF
 	//-eu=Ah
 	float volum;
 } eep_batt_volum_t;

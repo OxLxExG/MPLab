@@ -408,6 +408,7 @@ static void RunCmd(void)
 		
 	}
 }
+static uint8_t Adcnt; // + ais328
 
 int main(void)
 {
@@ -507,9 +508,12 @@ int main(void)
 			
 			ltc2942c::DelayHandler();
 			
-			if (Powered())
+			if (Powered() && Adcnt<16) // 8-256 мс данных из 2 с  //(Adcnt & 1) == 0 // (Adcnt & 1) == 0 //(Adcnt & 0x03) == 0) //32 раза
+
 			{
 				ResetFunction = 2;
+                Adcnt++; // + ais328
+
 				ais328.sample();
 				ResetFunction = 0;
 			}			
@@ -517,6 +521,8 @@ int main(void)
 		///           2s ticks
 		if (Clock.checkReady2Sec())
 		{
+            Adcnt = 0; // + ais328
+
 			ResetFunction = 10;
 			
 			if (TestModeTimer > 0) 			

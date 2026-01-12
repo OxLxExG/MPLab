@@ -5,7 +5,7 @@
   <confs>
     <conf name="default" type="2">
       <platformToolSN>noToolString</platformToolSN>
-      <languageToolchainDir>C:\IDEs\avr8-gnu-3.7.0-win32_x86_64\bin</languageToolchainDir>
+      <languageToolchainDir>C:\IDEs\avr-gcc-15.2.0-x64-windows\bin</languageToolchainDir>
       <mdbdebugger version="1">
         <placeholder1>place holder 1</placeholder1>
         <placeholder2>place holder 2</placeholder2>

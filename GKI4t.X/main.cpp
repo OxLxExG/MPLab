@@ -17,8 +17,8 @@
 #include <avr/wdt.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
-#include <math.h>
 #include <ccp.h>
+#include <math.h>
 #include <getarg.h>
 #include <usarts.hpp>
 #include <mx25l256.hpp>
@@ -355,7 +355,7 @@ static void AddSyncFrameSetupADC(void)
 	Uart.buf[9] =g2.bt[1]; //h no gain
 	Uart.buf[10] =g2.bt[0]; //l no gain
 
-	union cfgreg_u cfg;
+	union cfgreg_u cfg = {0};
 	cfg.cfg.gc_en = 1; // global chop
 	cfg.cfg.gc_delay = 0b11; //default delay
 	Uart.buf[12] =cfg.bt[1]; //h
@@ -433,13 +433,15 @@ static void StandBy(bool fullStop)
 }
 static void RunCmd(void)
 {
+	wdt_disable();
+			    
 	switch (Com.buf[CMD_POS])
 	{
 		case CMD_TIME_SYNC:
 		if (Com.Count == HEADER_LEN + 4 + CRC_LEN)
 		{
 			int32_t* wait_time = (int32_t*) &Com.buf[DATA_POS];
-			wdt_disable();
+			
 			//setup sleep timer, stop all peripheral work, goto idle mode
 			if (*wait_time == 0)
 			{
@@ -487,7 +489,9 @@ static void RunCmd(void)
 			}
 		break;
 		case CMD_ERAM:
+            StandBy(false);
 			Ram.readAndSendUart(&Com.buf[DATA_POS]);
+            StandBy(true);
 		break;
 		case CMD_ERAM_WRITE:
 			Com.buf[DATA_POS] = Ram.write(&Com.buf[DATA_POS+1], Com.buf[DATA_POS]);
@@ -558,8 +562,6 @@ static void RunCmd(void)
 			uint8_t* dptr = &Com.buf[DATA_POS+2];
 			
 			
-			wdt_disable();
-			
 			if (from == 0) // newbat flash 0x8000
 			{
 				eep_new_bat_t* b = (eep_new_bat_t*) dptr;
@@ -620,7 +622,7 @@ static void RunCmd(void)
 		break;
 		case CMD_INFO:
 			Com.CRCSend(ReadMetaData(&Com.buf[DATA_POS], Com.buf[DATA_POS], (Com.Count == HEADER_LEN+1+2+2)? *(uint16_t*)(&Com.buf[DATA_POS+1]): 0)+HEADER_LEN);
-		break;
+		break;        
 		//case CMD_ERR:
 		//uint8_t NeedClearErr = Com.buf[DATA_POS];
 		//Com.buf[DATA_POS] = Error_Code;
@@ -630,6 +632,10 @@ static void RunCmd(void)
 		//break;
 		
 	}
+    if ((workData.AppState == APP_DELAY) || (workData.AppState == APP_WORK))
+    {
+        wdt_enable(WDTO_N);
+    }    
 }
 
 int main(void)
@@ -644,7 +650,6 @@ int main(void)
 		{
 			workData.AppState = APP_DELAY;
 			StandBy(false);
-
 		}
 		else if(eep_kadr_charge.kadr.AppState == APP_WORK)
 		{
@@ -654,6 +659,8 @@ int main(void)
 			// восстановим последний кадр из памяти
 			uint32_t* pk = (uint32_t*) &lastKadr;
 			Ram.Restore(sizeof(RamData_t), pk);
+       		
+
 		}
 		else
 		{
@@ -662,9 +669,7 @@ int main(void)
 		workData.time = lastKadr;
 	
 		SaveResetInEEP(&lastKadr);
-		ResetFunction = 77;
-	
-		wdt_enable(WDTO_N);
+		ResetFunction = 77;	
 	}
 
 	LastKadrEEPChargeUpdate = workData.time;
@@ -685,6 +690,10 @@ int main(void)
 	
 	ltc2942c::twi.CallbackRegister(ltc2942c::I2CErr);
 	
+    if ((workData.AppState == APP_DELAY) || (workData.AppState == APP_WORK))
+    {
+        wdt_enable(WDTO_N);
+    }
 	sei();	
 	
 	UpdateFromEEP();

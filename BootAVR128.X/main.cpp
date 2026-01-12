@@ -4,6 +4,7 @@
  * Created: 19.11.2021 13:45:36
  * Author : User
  */ 
+#define DUPLEX
 
 #include <avr/io.h>
 #include <avr/sleep.h>

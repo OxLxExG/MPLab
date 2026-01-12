@@ -1,11 +1,3 @@
 {
-    "mplab.mplab-importer.projectLimit": 10,
-    "mplab.mplab-importer.ignorePatterns": [
-        "tsttiny1616.X/nbproject/configurations.xml",
-        "tstUart.X/nbproject/configurations.xml",
-        "tstMetaData.X/nbproject/configurations.xml",
-        "KART.X/nbproject/configurations.xml",
-        "NGK.X/nbproject/configurations.xml",
-        "NNK.X/nbproject/configurations.xml"
-    ]
+    "mplab.mplab-importer.projectLimit": 10
 }
